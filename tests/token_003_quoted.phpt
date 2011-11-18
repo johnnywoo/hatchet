@@ -6,13 +6,13 @@ Basic test: whole grammar is one simple quoted string
 
 require_once '_common.php';
 use hatchet\Grammar;
-use hatchet\Token_QuotedString;
+use hatchet\tokens\QuotedString;
 
 class TestGrammar extends Grammar
 {
 	public function __construct()
 	{
-		$this->root_token = new Token_QuotedString('');
+		$this->root_token = new QuotedString('');
 	}
 }
 

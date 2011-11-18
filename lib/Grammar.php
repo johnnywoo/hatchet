@@ -1,11 +1,10 @@
 <?
 
 namespace hatchet;
-use hatchet\hatchet_grammar\HatchetGrammar;
 
 class Grammar
 {
-	/** @var Token */
+	/** @var \hatchet\tokens\Token */
 	protected $root_token;
 
 	/**

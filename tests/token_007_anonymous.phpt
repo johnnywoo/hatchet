@@ -6,9 +6,9 @@ Basic test: flattening of anonymous tokens
 
 require_once '_common.php';
 use hatchet\Grammar;
-use hatchet\Token;
-use hatchet\hatchet_grammar\Multiplier;
-use hatchet\hatchet_grammar\Literal;
+use hatchet\tokens\Token;
+use hatchet\tokens\Multiplier;
+use hatchet\tokens\Literal;
 
 class TestGrammar extends Grammar
 {

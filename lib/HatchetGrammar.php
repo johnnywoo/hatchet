@@ -1,9 +1,12 @@
 <?
 
-namespace hatchet\hatchet_grammar;
-use hatchet\Grammar;
-use hatchet\Token;
-use hatchet\Token_QuotedString;
+namespace hatchet;
+use hatchet\tokens\Token;
+use hatchet\tokens\Alternative;
+use hatchet\tokens\Literal;
+use hatchet\tokens\Multiplier;
+use hatchet\tokens\QuotedString;
+use hatchet\tokens\Regexp;
 
 /**
  * A standard grammar for hatchet grammar file
@@ -28,7 +31,7 @@ class HatchetGrammar extends Grammar
 
 		// token: _quoted_ | name | native-name
 		$token = new Alternative('token', array(
-			new Token_QuotedString(),
+			new QuotedString(),
 			$native_name,
 			$name,
 		));

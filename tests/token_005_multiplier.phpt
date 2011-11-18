@@ -6,8 +6,8 @@ Basic test: multiplier
 
 require_once '_common.php';
 use hatchet\Grammar;
-use hatchet\hatchet_grammar\Multiplier;
-use hatchet\hatchet_grammar\Literal;
+use hatchet\tokens\Multiplier;
+use hatchet\tokens\Literal;
 
 class TestGrammar extends Grammar
 {

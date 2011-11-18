@@ -1,6 +1,6 @@
 <?
 
-namespace hatchet;
+namespace hatchet\tokens;
 
 class Token
 {

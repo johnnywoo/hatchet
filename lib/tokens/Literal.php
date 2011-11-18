@@ -1,7 +1,6 @@
 <?
 
-namespace hatchet\hatchet_grammar;
-use hatchet\Token;
+namespace hatchet\tokens;
 
 class Literal extends Token
 {

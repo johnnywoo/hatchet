@@ -1,8 +1,8 @@
 <?
 
-namespace hatchet;
+namespace hatchet\tokens;
 
-class Token_QuotedString extends Token
+class QuotedString extends Token
 {
 	public function scan(&$text)
 	{
