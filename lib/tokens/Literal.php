@@ -14,6 +14,9 @@ class Literal extends Token
 
 	public function scan(&$text)
 	{
+		// implicit whitespace
+		$text = preg_replace("/^[ \t]+/", '', $text);
+
 		$length = strlen($this->literal);
 		if(substr($text, 0, $length) == $this->literal)
 		{

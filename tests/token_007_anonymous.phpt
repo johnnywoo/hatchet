@@ -15,21 +15,30 @@ class TestGrammar extends Grammar
 	public function __construct()
 	{
 		$this->root_token = new Token('', array(
+			new Literal('start', '>'),
+			// the multiplier is anonymous, so its children will be present instead of it
 			new Multiplier(null, array(
 				new Literal('letter', 'a'),
 				new Literal('number', '1'),
+				new Multiplier(null, array(
+					// this token is anonymous and will not be included in the tree
+					new Literal(null, ','),
+				)),
 			)),
+			new Literal('end', '<'),
 		));
 	}
 }
 
 $grammar = new TestGrammar();
-dump_tree($grammar->parse('a1a1'));
+dump_tree($grammar->parse('>a1,a1<'));
 
 ?>
 --EXPECT--
-name: '' text: 'a1a1'
+name: '' text: '>a1,a1<'
+	name: 'start' text: '>'
 	name: 'letter' text: 'a'
 	name: 'number' text: '1'
 	name: 'letter' text: 'a'
 	name: 'number' text: '1'
+	name: 'end' text: '<'

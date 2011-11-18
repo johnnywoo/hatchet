@@ -2,11 +2,11 @@
 
 # Token definition without a name is the root one.
 # Curly braces are for 'repeats any number of times, including zero'.
-: {line}
+: [line {"\n" line}]
 
 # Square brackets are for 'may be present or not'.
 # Values in quotes are literals.
-line: [comment | definition] "\n"
+line: [comment | definition]
 
 # Parentheses are for grouping.
 # "|" is for alternative paths, it is bounded by () {} [] or
@@ -20,8 +20,8 @@ root-def: ":"
 alternative-tokens: tokens {"|" tokens}
 
 # Hatchet assumes that any number of whitespace chars may occur between tokens;
-# we use 'whitespace' token here to force at least one whitespace char.
-tokens: token {whitespace token}
+# we use special token _whitespace_ here to force at least one whitespace char.
+tokens: token {_whitespace_ token}
 
 # Special token _quoted_ is for a quoted string. PHP escaping is used in the string
 # for special characters.
@@ -31,7 +31,7 @@ grouping: "(" alternative-tokens ")"
 condition: "[" alternative-tokens "]"
 multiplier: "{" alternative-tokens "}"
 
-native-name: "_quoted_"
+native-name: "_quoted_" | "_whitespace_"
 
 # A token may be defined as a regexp.
 # The regexp should not have ^ or $ to work properly!
@@ -40,4 +40,3 @@ native-name: "_quoted_"
 name: /[a-zA-Z0-9_-]+/
 comment: /#[^\n]*+/
 regexp: /\/[^\n]*+/
-whitespace: /[ \t]/

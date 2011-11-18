@@ -14,6 +14,9 @@ class Regexp extends Token
 
 	public function scan(&$text)
 	{
+		// implicit whitespace
+		$text = preg_replace("/^[ \t]+/", '', $text);
+
 		if(preg_match($this->regexp, $text, $m))
 		{
 			$text = substr($text, strlen($m[0]));

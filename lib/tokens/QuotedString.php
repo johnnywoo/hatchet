@@ -6,6 +6,9 @@ class QuotedString extends Token
 {
 	public function scan(&$text)
 	{
+		// implicit whitespace
+		$text = preg_replace("/^[ \t]+/", '', $text);
+
 		if(preg_match('/^".*?"/', $text, $m))
 		{
 			$text = substr($text, strlen($m[0]));

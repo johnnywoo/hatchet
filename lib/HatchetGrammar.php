@@ -7,6 +7,7 @@ use hatchet\tokens\Literal;
 use hatchet\tokens\Multiplier;
 use hatchet\tokens\QuotedString;
 use hatchet\tokens\Regexp;
+use hatchet\tokens\Whitespace;
 
 /**
  * A standard grammar for hatchet grammar file
@@ -24,10 +25,12 @@ class HatchetGrammar extends Grammar
 		$name = new Regexp('name', '/[a-z0-9_-]+/');
 		// regexp: /\/[^\n]*+/
 		$regexp = new Regexp('regexp', '/\/[^\n]*+/');
-		// whitespace: /[ \t]/
-		$whitespace = new Regexp('whitespace', '/[ \t]/');
-		// native-name: "_quoted_"
-		$native_name = new Literal('native-name', '_quoted_');
+
+		// native-name: "_quoted_" | "_whitespace_"
+		$native_name = new Alternative('native-name', array(
+			new Literal(null, '_quoted_'),
+			new Literal(null, '_whitespace_'),
+		));
 
 		// token: _quoted_ | name | native-name
 		$token = new Alternative('token', array(
@@ -36,7 +39,7 @@ class HatchetGrammar extends Grammar
 			$name,
 		));
 
-		// definition: name ":" (_regexp | token {whitespace token})
+		// definition: name ":" (regexp | token {whitespace token})
 		$definition = new Token('definition', array(
 			$name,
 			new Literal(null, ':'),
@@ -45,17 +48,17 @@ class HatchetGrammar extends Grammar
 				new Token(null, array(
 					$token,
 					new Multiplier(null, array(
-						$whitespace,
+						new Whitespace(),
 						$token,
-					))
+					)),
 				)),
-			))
+			)),
 		));
 
 		// line: [comment | definition] "\n"
 		$line = new Token('line', array(
 			new Multiplier(null, array($comment, $definition), false),
-			new Literal(null, "\n")
+			new Literal(null, "\n"),
 		));
 
 		// : {line}

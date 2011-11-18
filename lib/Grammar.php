@@ -19,10 +19,16 @@ class Grammar
 	public function parse($text)
 	{
 		$ans = $this->root_token->scan($text);
+
 		if(is_null($ans))
 			throw new Exception('Parse error: root token not found');
+
+		// implicit whitespace
+		$text = preg_replace("/^[ \t]+/", '', $text);
+
 		if(strlen($text))
 			throw new Exception('Parse error: root token does not cover the whole text');
+
 		$tree = $this->makeup_tree(array($ans));
 		return reset($tree);
 	}
