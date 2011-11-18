@@ -1,27 +1,24 @@
 --TEST--
-Basic test: whole grammar is one literal
+Basic test: literal
 --ARGS--
 --FILE--
 <?php
 
-require_once __DIR__.'/../lib/autoload.php';
+require_once '_common.php';
 use hatchet\Grammar;
+use hatchet\hatchet_grammar\Literal;
 
 class TestGrammar extends Grammar
 {
 	public function __construct()
 	{
-		$this->root_token = new hatchet\hatchet_grammar\Literal('a');
+		$this->root_token = new Literal('', 'a');
 	}
 }
 
 $grammar = new TestGrammar();
-
-$node = $grammar->parse('a');
-var_dump($node->text, $node->children);
+dump_tree($grammar->parse('a'));
 
 ?>
 --EXPECT--
-string(1) "a"
-array(0) {
-}
+name: '' text: 'a'

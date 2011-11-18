@@ -7,8 +7,9 @@ class Literal extends Token
 {
 	private $literal = '';
 
-	public function __construct($literal)
+	public function __construct($name, $literal)
 	{
+		parent::__construct($name, array());
 		$this->literal = $literal;
 	}
 
@@ -18,9 +19,12 @@ class Literal extends Token
 		if(substr($text, 0, $length) == $this->literal)
 		{
 			$text = ($text == $this->literal) ? '' : substr($text, $length);
-			$this->text = $this->literal;
-			return true;
+			return array(
+				'name'        => $this->name,
+				'child_nodes' => array(),
+				'text'        => $this->literal,
+			);
 		}
-		return false;
+		return null;
 	}
 }

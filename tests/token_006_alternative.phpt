@@ -1,32 +1,39 @@
 --TEST--
-Basic test: three consecutive literals
+Basic test: alternative
 --ARGS--
 --FILE--
 <?php
 
 require_once '_common.php';
 use hatchet\Grammar;
-use hatchet\Token;
+use hatchet\hatchet_grammar\Alternative;
 use hatchet\hatchet_grammar\Literal;
 
 class TestGrammar extends Grammar
 {
 	public function __construct()
 	{
-		$this->root_token = new Token('', array(
+		$this->root_token = new Alternative('', array(
 			new Literal('', 'a'),
-			new Literal('', ':'),
 			new Literal('', 'b'),
 		));
 	}
 }
 
 $grammar = new TestGrammar();
-dump_tree($grammar->parse('a:b'));
+
+echo "First\n";
+dump_tree($grammar->parse('a'));
+
+echo "\nSecond\n";
+dump_tree($grammar->parse('b'));
 
 ?>
 --EXPECT--
-name: '' text: 'a:b'
+First
+name: '' text: 'a'
 	name: '' text: 'a'
-	name: '' text: ':'
+
+Second
+name: '' text: 'b'
 	name: '' text: 'b'

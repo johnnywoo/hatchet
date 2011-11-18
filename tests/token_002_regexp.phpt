@@ -1,27 +1,24 @@
 --TEST--
-Basic test: whole grammar is one regexp
+Basic test: regexp
 --ARGS--
 --FILE--
 <?php
 
-require_once __DIR__.'/../lib/autoload.php';
+require_once '_common.php';
 use hatchet\Grammar;
+use hatchet\hatchet_grammar\Regexp;
 
 class TestGrammar extends Grammar
 {
 	public function __construct()
 	{
-		$this->root_token = new hatchet\hatchet_grammar\Regexp('/a[0-9]/');
+		$this->root_token = new Regexp('', '/a[0-9]/');
 	}
 }
 
 $grammar = new TestGrammar();
-
-$node = $grammar->parse('a1');
-var_dump($node->text, $node->children);
+dump_tree($grammar->parse('a1'));
 
 ?>
 --EXPECT--
-string(2) "a1"
-array(0) {
-}
+name: '' text: 'a1'

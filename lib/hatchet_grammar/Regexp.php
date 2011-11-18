@@ -7,8 +7,9 @@ class Regexp extends Token
 {
 	private $regexp = '';
 
-	public function __construct($regexp)
+	public function __construct($name, $regexp)
 	{
+		parent::__construct($name, array());
 		$this->regexp = '/^'.substr($regexp, 1);
 	}
 
@@ -16,11 +17,13 @@ class Regexp extends Token
 	{
 		if(preg_match($this->regexp, $text, $m))
 		{
-			$this->text = $m[0];
-			$text = substr($text, strlen($this->text));
-			return true;
+			$text = substr($text, strlen($m[0]));
+			return array(
+				'name'        => $this->name,
+				'child_nodes' => array(),
+				'text'        => $m[0],
+			);
 		}
-
-		return false;
+		return null;
 	}
 }

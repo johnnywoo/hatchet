@@ -8,35 +8,48 @@ class Multiplier extends Token
 	private $only_one_or_zero = false;
 
 	/**
-	 * @param array $definition
+	 * @param string $name
+	 * @param \hatchet\Token[] $definition
 	 * @param bool $only_one_or_zero  FALSE = [], TRUE = {}
 	 */
-	public function __construct(array $definition, $only_one_or_zero = false)
+	public function __construct($name, array $definition, $only_one_or_zero = false)
 	{
-		$this->definition = $definition;
+		parent::__construct($name, $definition);
 		$this->only_one_or_zero = $only_one_or_zero;
 	}
 
 	public function scan(&$text)
 	{
-		$other = clone $this;
 		$orig_text = $text;
 
-		// token
-		foreach($this->definition as $token)
+		$child_nodes = array();
+
+		do
 		{
-			/** @var $data_token \hatchet\Token */
-			$data_token = clone $token;
-			if(!$data_token->scan($text))
+			$one_pass_child_nodes = array();
+			$one_pass_orig_text = $text;
+			// token
+			foreach($this->definition as $token)
 			{
-				$text = $orig_text;
-				return true;
+				$node = $token->scan($text);
+				if(is_null($node))
+				{
+					$text = $one_pass_orig_text;
+					break 2; // stop the whole search
+				}
+
+				$one_pass_child_nodes[] = $node;
 			}
+
+			// the pass succeeded: add found nodes to the list
+			$child_nodes = array_merge($child_nodes, $one_pass_child_nodes);
 		}
+		while(!$this->only_one_or_zero);
 
-		if(!$this->only_one_or_zero && $other->scan($text))
-			$this->children = array_merge($this->children, $other->children);
-
-		return true;
+		return array(
+			'name'        => $this->name,
+			'child_nodes' => $child_nodes,
+			'text'        => static::find_shifted_text($orig_text, $text),
+		);
 	}
 }

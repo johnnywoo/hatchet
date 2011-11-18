@@ -1,28 +1,43 @@
-# empty token definition is the root one
-# curly braces are for 'repeats any number of times, including zero'
+# This is a hatchet grammar specification for hatchet grammar file.
+
+# Token definition without a name is the root one.
+# Curly braces are for 'repeats any number of times, including zero'.
 : {line}
 
-# square brackets are for 'may be present or not'
+# Square brackets are for 'may be present or not'.
+# Values in quotes are literals.
 line: [comment | definition] "\n"
 
 # Parentheses are for grouping.
-# "|" is for alternative paths, it is bounded by parentheses or
-# the whole definition if there are no parentheses.
+# "|" is for alternative paths, it is bounded by () {} [] or
+# the whole definition if there are no boundaries.
+definition: (name-def | root-def) (regexp | alternative-tokens)
+
+name-def: name ":"
+root-def: ":"
+
+# Alternatives are separated by a pipe character "|".
+alternative-tokens: tokens {"|" tokens}
+
 # Hatchet assumes that any number of whitespace chars may occur between tokens;
 # we use 'whitespace' token here to force at least one whitespace char.
-definition: name ":" (regexp | token {whitespace token})
+tokens: token {whitespace token}
 
-# Special token _quoted is for a quoted string. PHP escaping is used in the string
+# Special token _quoted_ is for a quoted string. PHP escaping is used in the string
 # for special characters.
-token: _quoted_ | name | native-name
+token: _quoted_ | name | native-name | grouping | condition | multiplier
 
-native-name: "_quoted_" | ""
+grouping: "(" alternative-tokens ")"
+condition: "[" alternative-tokens "]"
+multiplier: "{" alternative-tokens "}"
+
+native-name: "_quoted_"
 
 # A token may be defined as a regexp.
 # The regexp should not have ^ or $ to work properly!
 # Please note that regexp can only be set as the whole token definition,
 # it cannot be inside of complex definitions!
-name: /[a-z0-9_-]+/
+name: /[a-zA-Z0-9_-]+/
 comment: /#[^\n]*+/
 regexp: /\/[^\n]*+/
 whitespace: /[ \t]/

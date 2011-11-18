@@ -4,52 +4,58 @@ namespace hatchet;
 
 class Token
 {
-	public $name = '';
-
-	public $text = '';
+	public $name = null;
 
 	/**
 	 * Definition of the token
-	 * @var hatchet\Token[]
+	 * @var Token[]
 	 */
 	public $definition = array();
 
 	/**
-	 * Scanned subtokens
-	 * @var hatchet\Token[]
+	 * @param null|string $name
+	 * @param array $definition
 	 */
-	public $children = array();
-
-	public function __construct(array $definition = array())
+	public function __construct($name = null, array $definition = array())
 	{
+		$this->name = $name;
 		$this->definition = $definition;
 	}
 
 	/**
 	 * Reads the text from start, cuts everything that matches the token's definition
 	 *
-	 * The scan should fill the current object with data (->text and ->children).
-	 * If the token if not found, FALSE should be returned; TRUE otherwise.
+	 * Return NULL if the token is not found; a data array otherwise.
 	 *
-	 * @param $text
-	 * @return bool success status
+	 * @param string $text
+	 * @return array|null
 	 */
 	public function scan(&$text)
 	{
 		$orig_text = $text;
 
+		$subtrees = array();
 		foreach($this->definition as $token)
 		{
-			/** @var $data_token \hatchet\Token */
-			$data_token = clone $token;
-			if(!$data_token->scan($text))
-				return false;
+			$subtree = $token->scan($text);
+			if(is_null($subtree))
+				return null;
 
-			$this->children[] = $data_token;
+			$subtrees[] = $subtree;
 		}
 
-		$this->text = substr($orig_text, 0, strlen($orig_text) - strlen($text));
+		return array(
+			'name'        => $this->name,
+			'child_nodes' => $subtrees,
+			'text'        => static::find_shifted_text($orig_text, $text),
+		);
+	}
 
-		return true;
+	public function find_shifted_text($orig_text, $new_text)
+	{
+		// substr will return false for an empty substring
+		if($orig_text === $new_text)
+			return '';
+		return substr($orig_text, 0, strlen($orig_text) - strlen($new_text));
 	}
 }

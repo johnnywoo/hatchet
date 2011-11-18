@@ -8,11 +8,13 @@ class Token_QuotedString extends Token
 	{
 		if(preg_match('/^".*?"/', $text, $m))
 		{
-			$this->text = $m[0];
-			$text = substr($text, strlen($this->text));
-			return true;
+			$text = substr($text, strlen($m[0]));
+			return array(
+				'name'        => $this->name,
+				'child_nodes' => array(),
+				'text'        => $m[0],
+			);
 		}
-
-		return false;
+		return null;
 	}
 }

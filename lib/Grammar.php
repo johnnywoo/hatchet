@@ -19,12 +19,31 @@ class Grammar
 
 	public function parse($text)
 	{
-		/** @var $token Token */
-		$token = clone $this->root_token;
-		if(!$token->scan($text))
-			throw new \Exception('Parse error: root token not found');
+		$ans = $this->root_token->scan($text);
+		if(is_null($ans))
+			throw new Exception('Parse error: root token not found');
 		if(strlen($text))
-			throw new \Exception('Parse error: root token does not cover the whole text');
-		return $token;
+			throw new Exception('Parse error: root token does not cover the whole text');
+		$tree = $this->makeup_tree(array($ans));
+		return reset($tree);
+	}
+
+	private function makeup_tree($nodes)
+	{
+		$new_nodes = array();
+		foreach($nodes as $node)
+		{
+			$node['child_nodes'] = $this->makeup_tree($node['child_nodes']);
+
+			if(is_null($node['name']))
+			{
+				$new_nodes = array_merge($new_nodes, $node['child_nodes']);
+			}
+			else
+			{
+				$new_nodes[] = $node;
+			}
+		}
+		return $new_nodes;
 	}
 }

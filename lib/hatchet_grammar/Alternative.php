@@ -12,14 +12,19 @@ class Alternative extends Token
 		// token
 		foreach($this->definition as $token)
 		{
-			/** @var $data_token \hatchet\Token */
-			$data_token = clone $token;
-			if($data_token->scan($text))
-				return true;
+			$child = $token->scan($text);
+			if(!is_null($child))
+			{
+				return array(
+					'name'        => $this->name,
+					'child_nodes' => array($child),
+					'text'        => static::find_shifted_text($orig_text, $text),
+				);
+			}
 
 			$text = $orig_text;
 		}
 
-		return false;
+		return null;
 	}
 }

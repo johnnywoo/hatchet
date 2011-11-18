@@ -1,19 +1,17 @@
 --TEST--
 Basic test: whole grammar is one simple quoted string
 --ARGS--
+--SKIPIF--
+Skipped: not implemented yet.
 --FILE--
 <?php
 
-require_once __DIR__.'/../lib/autoload.php';
+require_once '_common.php';
 use hatchet\Grammar;
 
 $grammar = new Grammar(':"a"');
-
-$node = $grammar->parse('a');
-var_dump($node->text, $node->children);
+dump_tree($grammar->parse('a'));
 
 ?>
 --EXPECT--
-string(1) "a"
-array(0) {
-}
+name: '' text: 'a'

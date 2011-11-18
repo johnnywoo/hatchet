@@ -16,35 +16,32 @@ class HatchetGrammar extends Grammar
 	public function __construct()
 	{
 		// comment: /#[^\n]*+/
-		$comment = new Regexp('/#[^\n]*+/');
+		$comment = new Regexp('comment', '/#[^\n]*+/');
 		// name: /[a-z0-9_-]+/
-		$name = new Regexp('/[a-z0-9_-]+/');
+		$name = new Regexp('name', '/[a-z0-9_-]+/');
 		// regexp: /\/[^\n]*+/
-		$regexp = new Regexp('/\/[^\n]*+/');
+		$regexp = new Regexp('regexp', '/\/[^\n]*+/');
 		// whitespace: /[ \t]/
-		$whitespace = new Regexp('/[ \t]/');
+		$whitespace = new Regexp('whitespace', '/[ \t]/');
 		// native-name: "_quoted_"
-		$native_name = new Alternative(array(
-			new Literal('_quoted_'),
-			new Literal(''),
-		));
+		$native_name = new Literal('native-name', '_quoted_');
 
 		// token: _quoted_ | name | native-name
-		$token = new Alternative(array(
+		$token = new Alternative('token', array(
 			new Token_QuotedString(),
 			$native_name,
 			$name,
 		));
 
 		// definition: name ":" (_regexp | token {whitespace token})
-		$definition = new Token(array(
+		$definition = new Token('definition', array(
 			$name,
-			new Literal(':'),
-			new Alternative(array(
+			new Literal(null, ':'),
+			new Alternative(null, array(
 				$regexp,
-				new Token(array(
+				new Token(null, array(
 					$token,
-					new Multiplier(array(
+					new Multiplier(null, array(
 						$whitespace,
 						$token,
 					))
@@ -53,13 +50,13 @@ class HatchetGrammar extends Grammar
 		));
 
 		// line: [comment | definition] "\n"
-		$line = new Token(array(
-			new Multiplier(array($comment, $definition), false),
-			new Literal("\n")
+		$line = new Token('line', array(
+			new Multiplier(null, array($comment, $definition), false),
+			new Literal(null, "\n")
 		));
 
 		// : {line}
-		$root = new Multiplier(array($line));
+		$root = new Multiplier('', array($line));
 
 		$this->root_token = $root;
 	}

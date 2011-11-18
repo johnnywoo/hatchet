@@ -4,24 +4,21 @@ Basic test: whole grammar is one simple quoted string
 --FILE--
 <?php
 
-require_once __DIR__.'/../lib/autoload.php';
+require_once '_common.php';
 use hatchet\Grammar;
+use hatchet\Token_QuotedString;
 
 class TestGrammar extends Grammar
 {
 	public function __construct()
 	{
-		$this->root_token = new hatchet\Token_QuotedString();
+		$this->root_token = new Token_QuotedString('');
 	}
 }
 
 $grammar = new TestGrammar();
-
-$node = $grammar->parse('"kar"');
-var_dump($node->text, $node->children);
+dump_tree($grammar->parse('"kar"'));
 
 ?>
 --EXPECT--
-string(5) ""kar""
-array(0) {
-}
+name: '' text: '"kar"'
