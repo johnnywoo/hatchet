@@ -21,4 +21,4 @@ dump_tree($grammar->parse('a1'));
 
 ?>
 --EXPECT--
-name: '' text: 'a1'
+'' text: 'a1'

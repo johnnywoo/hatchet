@@ -8,7 +8,7 @@ class Regexp extends Token
 
 	public function __construct($name, $regexp)
 	{
-		parent::__construct($name, array());
+		parent::__construct($name);
 		$this->regexp = '/^'.substr($regexp, 1);
 	}
 

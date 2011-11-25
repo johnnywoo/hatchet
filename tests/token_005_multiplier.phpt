@@ -30,10 +30,9 @@ dump_tree($grammar->parse(''));
 ?>
 --EXPECT--
 Normal
-name: '' text: 'aaa'
-	name: '' text: 'a'
-	name: '' text: 'a'
-	name: '' text: 'a'
+'' text: 'aaa'
+	'' text: 'a'
+	'' text: 'a'
+	'' text: 'a'
 
 Empty
-name: '' text: ''

@@ -2,6 +2,15 @@
 
 namespace hatchet\tokens;
 
+/**
+ * A special token for whitespace
+ *
+ * Whitespace in Hatchet is implicit, any number of [ \t] can be present
+ * between tokens. This means that a regexp or literal cannot start with
+ * whitespace. If you need to force a whitespace char between tokens,
+ * use _whitespace_:
+ *   list: word {_whitespace_ word}
+ */
 class Whitespace extends Token
 {
 	private $chars = array(' ', "\t");

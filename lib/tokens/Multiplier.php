@@ -25,28 +25,26 @@ class Multiplier extends Token
 
 		do
 		{
-			$one_pass_child_nodes = array();
 			$one_pass_orig_text = $text;
-			// token
-			foreach($this->definition as $token)
+			$node = parent::scan($text);
+			if(is_null($node))
 			{
-				$node = $token->scan($text);
-				if(is_null($node))
-				{
-					$text = $one_pass_orig_text;
-					break 2; // stop the whole search
-				}
-
-				$one_pass_child_nodes[] = $node;
+				// backtrack
+				$text = $one_pass_orig_text;
+				break;
 			}
 
+			// match found, but it has no text
+			if($text === $one_pass_orig_text)
+				break;
+
 			// the pass succeeded: add found nodes to the list
-			$child_nodes = array_merge($child_nodes, $one_pass_child_nodes);
+			$child_nodes = array_merge($child_nodes, $node['child_nodes']);
 		}
 		while(!$this->only_one_or_zero);
 
 		return array(
-			'name'        => $this->name,
+			'name'        => count($child_nodes) ? $this->name : null,
 			'child_nodes' => $child_nodes,
 			'text'        => static::find_shifted_text($orig_text, $text),
 		);

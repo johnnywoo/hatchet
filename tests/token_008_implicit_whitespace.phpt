@@ -25,7 +25,7 @@ dump_tree($grammar->parse(" a  \taa "));
 
 ?>
 --EXPECT--
-name: '' text: ' a  	aa'
-	name: 'char' text: 'a'
-	name: 'char' text: 'a'
-	name: 'char' text: 'a'
+'' text: ' a  	aa'
+	'char' text: 'a'
+	'char' text: 'a'
+	'char' text: 'a'

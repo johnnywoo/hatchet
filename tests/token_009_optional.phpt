@@ -1,20 +1,21 @@
 --TEST--
-Basic test: alternative
+Basic test: optional tokens
 --ARGS--
 --FILE--
 <?php
 
 require_once '_common.php';
 use hatchet\Grammar;
-use hatchet\tokens\Alternative;
+use hatchet\tokens\Token;
+use hatchet\tokens\Multiplier;
 use hatchet\tokens\Literal;
 
 class TestGrammar extends Grammar
 {
 	public function __construct()
 	{
-		$this->root_token = new Alternative('', array(
-			new Literal('', 'a'),
+		$this->root_token = new Token('', array(
+			new Multiplier('', array(new Literal('', 'a')), true),
 			new Literal('', 'b'),
 		));
 	}
@@ -22,18 +23,20 @@ class TestGrammar extends Grammar
 
 $grammar = new TestGrammar();
 
-echo "First\n";
-dump_tree($grammar->parse('a'));
+echo "Normal\n";
+dump_tree($grammar->parse('ab'));
 
-echo "\nSecond\n";
+echo "\nEmpty\n";
 dump_tree($grammar->parse('b'));
 
 ?>
 --EXPECT--
-First
-'' text: 'a'
+Normal
+'' text: 'ab'
 	'' text: 'a'
+		'' text: 'a'
+	'' text: 'b'
 
-Second
+Empty
 '' text: 'b'
 	'' text: 'b'

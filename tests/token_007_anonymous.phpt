@@ -35,10 +35,10 @@ dump_tree($grammar->parse('>a1,a1<'));
 
 ?>
 --EXPECT--
-name: '' text: '>a1,a1<'
-	name: 'start' text: '>'
-	name: 'letter' text: 'a'
-	name: 'number' text: '1'
-	name: 'letter' text: 'a'
-	name: 'number' text: '1'
-	name: 'end' text: '<'
+'' text: '>a1,a1<'
+	'start' text: '>'
+	'letter' text: 'a'
+	'number' text: '1'
+	'letter' text: 'a'
+	'number' text: '1'
+	'end' text: '<'

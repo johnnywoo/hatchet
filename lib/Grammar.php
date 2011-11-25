@@ -29,8 +29,16 @@ class Grammar
 		if(strlen($text))
 			throw new Exception('Parse error: root token does not cover the whole text');
 
-		$tree = $this->makeup_tree(array($ans));
-		return reset($tree);
+		return $this->makeup_tree(array($ans));
+	}
+
+	protected function create_nodes($name, $text, array $child_nodes)
+	{
+		return array(array(
+			'name'        => $name,
+			'text'        => $text,
+			'child_nodes' => $child_nodes,
+		));
 	}
 
 	private function makeup_tree($nodes)
@@ -38,16 +46,15 @@ class Grammar
 		$new_nodes = array();
 		foreach($nodes as $node)
 		{
-			$node['child_nodes'] = $this->makeup_tree($node['child_nodes']);
+			$child_nodes = $this->makeup_tree($node['child_nodes']);
 
+			// internal anonymous nodes should not make it to the callback
 			if(is_null($node['name']))
-			{
-				$new_nodes = array_merge($new_nodes, $node['child_nodes']);
-			}
+				$append = $child_nodes;
 			else
-			{
-				$new_nodes[] = $node;
-			}
+				$append = $this->create_nodes($node['name'], $node['text'], $child_nodes);
+
+			$new_nodes = array_merge($new_nodes, $append);
 		}
 		return $new_nodes;
 	}

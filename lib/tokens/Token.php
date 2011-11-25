@@ -19,7 +19,12 @@ class Token
 	public function __construct($name = null, array $definition = array())
 	{
 		$this->name = $name;
-		$this->definition = $definition;
+		$this->set_definition($definition);
+	}
+
+	public function set_definition(array $tokens)
+	{
+		$this->definition = $tokens;
 	}
 
 	/**
@@ -34,19 +39,19 @@ class Token
 	{
 		$orig_text = $text;
 
-		$subtrees = array();
+		$child_nodes = array();
 		foreach($this->definition as $token)
 		{
-			$subtree = $token->scan($text);
-			if(is_null($subtree))
+			$node = $token->scan($text);
+			if(is_null($node))
 				return null;
 
-			$subtrees[] = $subtree;
+			$child_nodes[] = $node;
 		}
 
 		return array(
 			'name'        => $this->name,
-			'child_nodes' => $subtrees,
+			'child_nodes' => $child_nodes,
 			'text'        => static::find_shifted_text($orig_text, $text),
 		);
 	}

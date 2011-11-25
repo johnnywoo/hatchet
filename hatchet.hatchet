@@ -1,42 +1,51 @@
-# This is a hatchet grammar specification for hatchet grammar file.
+# This is a grammar for hatchet grammar files.
 
-# Token definition without a name is the root one.
+# Token definition without a name is the root one. It must cover the whole parsed file.
+# Square brackets are for 'may be present or not'.
 # Curly braces are for 'repeats any number of times, including zero'.
+# Values in quotes are literals.
 : [line {"\n" line}]
 
-# Square brackets are for 'may be present or not'.
-# Values in quotes are literals.
-line: [comment | definition]
-
-# Parentheses are for grouping.
+# Names of tokens are case sensitive.
 # "|" is for alternative paths, it is bounded by () {} [] or
 # the whole definition if there are no boundaries.
-definition: (name-def | root-def) (regexp | alternative-tokens)
+line: [comment | DEFINITION]
 
-name-def: name ":"
-root-def: ":"
+# Parentheses are for grouping.
+# The name is uppercased by convention: nodes with names not starting with
+# an uppercase char are anonymized (replaced with child nodes).
+# It is implemented in the parser of grammars; Hatchet does NOT do this by default!
+DEFINITION: [NAME] ":" (REGEXP | BODY)
+
+# Alternatives with only one option are optimized out,
+# but we always want the definition body to be separate from its name,
+# so we wouldn't confuse root definition with a named one.
+BODY: ALTERNATIVE-TOKENS
 
 # Alternatives are separated by a pipe character "|".
-alternative-tokens: tokens {"|" tokens}
+ALTERNATIVE-TOKENS: TOKENS {"|" TOKENS}
 
 # Hatchet assumes that any number of whitespace chars may occur between tokens;
 # we use special token _whitespace_ here to force at least one whitespace char.
-tokens: token {_whitespace_ token}
+TOKENS: token {_whitespace_ token}
+
+token: LITERAL | NAME | NATIVE-NAME | grouping | CONDITION | MULTIPLIER
 
 # Special token _quoted_ is for a quoted string. PHP escaping is used in the string
-# for special characters.
-token: _quoted_ | name | native-name | grouping | condition | multiplier
+# for special characters. We use it under a separate name here to capture the quoted
+# string separately, so we can dequote it.
+LITERAL: _quoted_
 
-grouping: "(" alternative-tokens ")"
-condition: "[" alternative-tokens "]"
-multiplier: "{" alternative-tokens "}"
+grouping: "(" ALTERNATIVE-TOKENS ")"
+CONDITION: "[" ALTERNATIVE-TOKENS "]"
+MULTIPLIER: "{" ALTERNATIVE-TOKENS "}"
 
-native-name: "_quoted_" | "_whitespace_"
+NATIVE-NAME: "_quoted_" | "_whitespace_"
 
 # A token may be defined as a regexp.
 # The regexp should not have ^ or $ to work properly!
 # Please note that regexp can only be set as the whole token definition,
 # it cannot be inside of complex definitions!
-name: /[a-zA-Z0-9_-]+/
+NAME: /[a-zA-Z0-9_-]+/
 comment: /#[^\n]*+/
-regexp: /\/[^\n]*+/
+REGEXP: /\/[^\n]*+/

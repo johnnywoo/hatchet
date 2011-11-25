@@ -1,0 +1,104 @@
+--TEST--
+Our own grammar: hatchet.hatchet should be parseable by the native grammar parser
+--ARGS--
+--SKIPIF--
+
+--FILE--
+<?php
+
+require_once '_common.php';
+use hatchet\HatchetGrammar;
+
+$grammar = new HatchetGrammar();
+dump_tree_less_noise($grammar->parse(file_get_contents(__DIR__.'/../hatchet.hatchet')));
+
+?>
+--EXPECT--
+DEFINITION
+	BODY
+		CONDITION
+			NAME line
+			MULTIPLIER
+				LITERAL "\n"
+				NAME line
+DEFINITION
+	NAME line
+	BODY
+		CONDITION
+			ALTERNATIVE-TOKENS
+				NAME comment
+				NAME DEFINITION
+DEFINITION
+	NAME DEFINITION
+	BODY
+		CONDITION
+			NAME NAME
+		LITERAL ":"
+		ALTERNATIVE-TOKENS
+			NAME REGEXP
+			NAME BODY
+DEFINITION
+	NAME BODY
+	BODY
+		NAME ALTERNATIVE-TOKENS
+DEFINITION
+	NAME ALTERNATIVE-TOKENS
+	BODY
+		NAME TOKENS
+		MULTIPLIER
+			LITERAL "|"
+			NAME TOKENS
+DEFINITION
+	NAME TOKENS
+	BODY
+		NAME token
+		MULTIPLIER
+			NAME _whitespace_
+			NAME token
+DEFINITION
+	NAME token
+	BODY
+		ALTERNATIVE-TOKENS
+			NAME LITERAL
+			NAME NAME
+			NAME NATIVE-NAME
+			NAME grouping
+			NAME CONDITION
+			NAME MULTIPLIER
+DEFINITION
+	NAME LITERAL
+	BODY
+		NAME _quoted_
+DEFINITION
+	NAME grouping
+	BODY
+		LITERAL "("
+		NAME ALTERNATIVE-TOKENS
+		LITERAL ")"
+DEFINITION
+	NAME CONDITION
+	BODY
+		LITERAL "["
+		NAME ALTERNATIVE-TOKENS
+		LITERAL "]"
+DEFINITION
+	NAME MULTIPLIER
+	BODY
+		LITERAL "{"
+		NAME ALTERNATIVE-TOKENS
+		LITERAL "}"
+DEFINITION
+	NAME NATIVE-NAME
+	BODY
+		ALTERNATIVE-TOKENS
+			LITERAL "_quoted_"
+			LITERAL "_whitespace_"
+DEFINITION
+	NAME NAME
+	REGEXP /[a-zA-Z0-9_-]+/
+DEFINITION
+	NAME comment
+	REGEXP /#[^\n]*+/
+DEFINITION
+	NAME REGEXP
+	REGEXP /\/[^\n]*+/

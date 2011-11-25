@@ -26,7 +26,7 @@ dump_tree($grammar->parse('a:b'));
 
 ?>
 --EXPECT--
-name: '' text: 'a:b'
-	name: 'char' text: 'a'
-	name: 'char' text: ':'
-	name: 'char' text: 'b'
+'' text: 'a:b'
+	'char' text: 'a'
+	'char' text: ':'
+	'char' text: 'b'
