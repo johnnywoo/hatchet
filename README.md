@@ -5,8 +5,9 @@
 ## HOWTO
 
     <?
+	require_once 'hatchet/lib/autoload.php';
     $grammar = new hatchet\Grammar(file_get_contents('your-grammar.hatchet'));
-    $tree = $parser->parse($grammar);
+    $tree = $grammar->parse($text);
     ?>
 
 ### Performance considerations
