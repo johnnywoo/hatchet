@@ -1,8 +1,6 @@
 --TEST--
 Our own grammar: hatchet.hatchet should be parseable by the native grammar parser
 --ARGS--
---SKIPIF--
-
 --FILE--
 <?php
 

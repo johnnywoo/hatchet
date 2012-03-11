@@ -56,7 +56,7 @@ class Token
 		);
 	}
 
-	public function find_shifted_text($orig_text, $new_text)
+	public static function find_shifted_text($orig_text, $new_text)
 	{
 		// substr will return false for an empty substring
 		if($orig_text === $new_text)

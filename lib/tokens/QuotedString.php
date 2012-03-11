@@ -20,4 +20,9 @@ class QuotedString extends Token
 		}
 		return null;
 	}
+
+	public static function decode($quoted_string)
+	{
+		return eval('return ' . $quoted_string . ';');
+	}
 }

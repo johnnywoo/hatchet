@@ -128,4 +128,200 @@ class HatchetGrammar extends Grammar
 
 		return parent::create_nodes($name, $text, $child_nodes);
 	}
+
+	public static function build_root_token($grammar)
+	{
+		static $hatchet_grammar;
+		if(!$hatchet_grammar)
+			$hatchet_grammar = new static();
+
+		return static::build($hatchet_grammar->parse($grammar));
+	}
+
+	private static $definitions = array();
+	/** @var Token[] */
+	private static $followup_tokens = array();
+
+	/**
+	 * Converts a parsed grammar into a tree of tokens
+	 *
+	 * A parsed grammar tree is a tree of token definitions.
+	 * We need to use those definitions to recursively build
+	 * a token tree for the root token.
+	 *
+	 * Essentially, this:
+	 * |-- root
+	 * |   |-- a
+	 * |   `-- b
+	 * |-- a
+	 * |   `-- "a"
+	 * `-- b
+	 *     |-- "b"
+	 *     |-- or
+	 *     `-- 2
+	 * Should become this:
+	 * root
+	 * `-- "a"
+	 * `-- alternative
+	 *     |-- "b"
+	 *     `-- 2
+	 *
+	 * @param array $tree
+	 * @return Token
+	 */
+	private static function build($tree)
+	{
+		static::$definitions     = array();
+		static::$followup_tokens = array();
+
+		// preparing a list of token definitions
+		foreach($tree as $node)
+		{
+			/*
+			 * A node is an array of:
+			 * [name] => DEFINITION
+			 * [text] => : [line {"\n" line}]
+			 * [child_nodes] => array
+			 */
+
+			// one token = root def, two = name and body
+			$name = (count($node['child_nodes']) > 1) ? $node['child_nodes'][0]['text'] : '';
+
+			if(isset(static::$definitions[$name]))
+				throw new Exception("Token $name is already defined");
+
+			static::$definitions[$name] = end($node['child_nodes']);
+		}
+
+		// converting token definitions to token trees (without recursive tokens)
+		$token = static::get_token(''); // '' is the name of the root token
+
+		// installing recursive tokens
+		foreach(static::$followup_tokens as $name=>$t)
+		{
+			$t->set_definition(array(static::get_token($name)));
+		}
+
+		// removing meaningless tokens
+		$spt = new Token(null, array($token));
+		$spt = static::remove_meaningless_tokens($spt);
+		$token = $spt->definition[0];
+
+		return $token;
+	}
+
+	private static function remove_meaningless_tokens(Token $token, $visited = array())
+	{
+		if(in_array($token, $visited))
+			return $token;
+
+		$visited[] = $token;
+
+		foreach($token->definition as $k=>$t)
+		{
+			while(get_class($t) == __NAMESPACE__.'\Token' && count($t->definition) == 1 && is_null($t->name))
+			{
+				$t = $t->definition[0];
+				$token->definition[$k] = $t;
+			}
+
+			$token->definition[$k] = static::remove_meaningless_tokens($token->definition[$k], $visited);
+		}
+
+		return $token;
+	}
+
+	/**
+	 * Returns a token by name, creates it if necessary
+	 *
+	 * @param string $name
+	 * @return Token
+	 */
+	private static function get_token($name)
+	{
+		if(!isset(static::$definitions[$name]))
+		{
+			if($name == '_quoted_')
+				static::$definitions[$name] = new QuotedString();
+			else if($name == '_whitespace_')
+				static::$definitions[$name] = new Whitespace();
+			else
+				throw new Exception('Cannot find definition for '.($name == '' ? 'root token' : $name));
+		}
+
+		if(static::$definitions[$name] instanceof Token)
+			return static::$definitions[$name];
+
+		$body = static::$definitions[$name];
+		$token = static::build_token_by_tree($body);
+		$token->name = $name;
+
+		static::$definitions[$name] = $token;
+		return $token;
+	}
+
+	/**
+	 * Creates a token by its definition tree
+	 *
+	 * @param array $node
+	 * @return Token
+	 */
+	private static function build_token_by_tree($node)
+	{
+		// This name is not a node name in terms of our new grammar (that we're parsing);
+		// it's a name in terms of the grammar grammar (that we parse with).
+		// So in terms of building new tokens it's actually a type, not a name.
+		$type = $node['name'];
+		switch($type)
+		{
+			case 'REGEXP':
+				return new Regexp(null, $node['text']);
+
+			case 'LITERAL':
+				return new Literal(null, QuotedString::decode($node['text']));
+
+			case 'BODY':
+				return new Token(null, static::build_tokens($node['child_nodes']));
+
+			case 'CONDITION':
+				return new Multiplier(null, static::build_tokens($node['child_nodes']), true);
+
+			case 'MULTIPLIER':
+				return new Multiplier(null, static::build_tokens($node['child_nodes']));
+
+			case 'NAME':
+				// I will take these cotton balls from you with my hand and put them in my pocket.
+				// That is, here we replace name of a token with the actual token
+				// (which we built from its definiton).
+				// Unfortunately, we cannot just return get_token() here because of recursive definitions.
+				// We need to return something NOW, and when all definitions are built we can
+				// follow up and insert correct references to these temporary tokens.
+				$token =& static::$followup_tokens[$node['text']];
+				if(!isset($token))
+				{
+					$token = new Token(); // this actually creates an enormous amount of anonymous tokens
+					static::get_token($node['text']); // make sure we build it
+				}
+				return static::$followup_tokens[$node['text']];
+
+			case 'ALTERNATIVE-TOKENS':
+				return new Alternative(null, static::build_tokens($node['child_nodes']));
+		}
+
+		throw new Exception('Cannot build grammar token ' . $type);
+	}
+
+	/**
+	 * @param array $nodes
+	 * @return Token[]
+	 */
+	private static function build_tokens($nodes)
+	{
+		$tokens = array();
+		foreach($nodes as $node)
+		{
+			$tokens[] = static::build_token_by_tree($node);
+		}
+		return $tokens;
+	}
 }

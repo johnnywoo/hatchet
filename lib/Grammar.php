@@ -1,6 +1,7 @@
 <?
 
 namespace hatchet;
+use hatchet\tokens\Token;
 
 class Grammar
 {
@@ -12,8 +13,7 @@ class Grammar
 	 */
 	public function __construct($grammar)
 	{
-		$hatchet_grammar = new HatchetGrammar();
-		$this->root_token = $hatchet_grammar->parse($grammar);
+		$this->root_token = HatchetGrammar::build_root_token($grammar);
 	}
 
 	public function parse($text)

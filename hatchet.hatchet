@@ -17,7 +17,7 @@ line: [comment | DEFINITION]
 # It is implemented in the parser of grammars; Hatchet does NOT do this by default!
 DEFINITION: [NAME] ":" (REGEXP | BODY)
 
-# Alternatives with only one option are optimized out,
+# Alternatives with only one option are optimized out (again, this is not default),
 # but we always want the definition body to be separate from its name,
 # so we wouldn't confuse root definition with a named one.
 BODY: ALTERNATIVE-TOKENS
