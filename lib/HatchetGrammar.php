@@ -219,10 +219,27 @@ class HatchetGrammar extends Grammar
 
 		foreach($token->definition as $k=>$t)
 		{
-			while(get_class($t) == __NAMESPACE__.'\Token' && count($t->definition) == 1 && is_null($t->name))
+			while(get_class($t) == __NAMESPACE__.'\tokens\Token' && count($t->definition) == 1)
 			{
-				$t = $t->definition[0];
-				$token->definition[$k] = $t;
+				if(is_null($t->name))
+				{
+					// removing anonymous tokens that only have one child
+					$t = $t->definition[0];
+					$token->definition[$k] = $t;
+				}
+				else if(is_null($t->definition[0]->name) && count($t->definition[0]->definition) == 0)
+				{
+					// if a named token has only one child that is an anonymous leave, we can remove it too
+					// this helps with wrapping _quoted_ in a token to give it a name (if we don't remove the
+					// wrapper, it will capture whitespace next to the _quoted_)
+					$t->definition[0]->name = $t->name;
+					$t = $t->definition[0];
+					$token->definition[$k] = $t;
+				}
+				else
+				{
+					break;
+				}
 			}
 
 			$token->definition[$k] = static::remove_meaningless_tokens($token->definition[$k], $visited);
