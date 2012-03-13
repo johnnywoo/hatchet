@@ -15,7 +15,7 @@ application of it.
 
     <?
 	require_once 'hatchet/lib/autoload.php';
-    $grammar = new hatchet\Grammar(file_get_contents('your-grammar.hatchet'));
+    $grammar = new \hatchet\Grammar(file_get_contents('your-grammar.hatchet'));
     $tree = $grammar->parse($text);
     ?>
 
@@ -93,6 +93,7 @@ space/tab between your tokens. Hatchet by default allows any whitespace between 
  * Investigate friendly syntax errors with line numbers
  * Investigate performance and memory usage
  * Make an example for expression parsing and operator precedence (calculator)
+ * (@named "groups")? Could be useful to assign same name to different literals
 
 We can make callbacks with signature process_child($node, $child)
 and probably will be able to start from root and then go deep.
