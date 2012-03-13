@@ -1,0 +1,19 @@
+# A simple math expression grammar
+
+: expr
+
+# Our super-complicated compiler simply groups operations
+# by token tree; within the group operators are applied
+# sequentially. So if we split ops with different precedence
+# into different tokens, the calculator will work nicely.
+# Make sure to keep same level ops on same levels in the tree!
+
+expr:       summand {plus summand}
+summand:    multiplier {times multiplier}
+multiplier: number | group
+
+group: "(" expr ")"
+
+plus: "+" | "-"
+times: "*" | "/"
+number: /-?\d+/
