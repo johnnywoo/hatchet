@@ -84,12 +84,15 @@ space/tab between your tokens. Hatchet by default allows any whitespace between 
  * Normal quote processing instead of eval
  * Parse-time callbacks
  * Whitespace modes
+ * Probably a way to specify whitespace mode for a token
+ * Maybe replace _whitespace_ with normal regexp tokens
  * A proper readme
  * Examples with simple formats (ini, css)
  * Inline regex literals
  * Make the grammar grammar CRLF-friendly
  * Investigate friendly syntax errors with line numbers
  * Investigate performance and memory usage
+ * Make an example for expression parsing and operator precedence (calculator)
 
 We can make callbacks with signature process_child($node, $child)
 and probably will be able to start from root and then go deep.
