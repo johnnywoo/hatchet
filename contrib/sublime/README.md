@@ -5,5 +5,6 @@ other editor that supports `tmLanguage` bundles.
 
 ## Installation
 
-Copy `Hatchet` folder into `~/Library/Application Support/Sublime Text 2/Packages`.
-This path is for Mac OS X; for other systems the path would be similar.
+Copy `Hatchet` folder into `~/Library/Application Support/Sublime Text 2/Packages/User`.
+See [the docs](http://docs.sublimetext.info/en/latest/basic_concepts.html#the-packages-directory)
+to locate the path on your system.
