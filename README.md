@@ -24,29 +24,33 @@ application of it.
 A grammar is a list of token definitions. You can look at hatchet.hatchet
 for an example (that is actually a grammar of the grammar itself).
 
-Comments in a grammar are lines starting with `#`. There are no multiline comments at the moment.
+Comments in a grammar are lines starting with `#`. There are no multiline
+comments at the moment.
 
 ### Example: INI file grammar
 
-First of all, we need to define a root token. Token without a name will be used as the root one.
-It must cover the whole parsed file. Our INI file is a list of sections, which all have names,
-except possibly the first one (it can be anonymous).
+First of all, we need to define a root token. Token without a name will be used
+as the root one. It must cover the whole parsed file. Our INI file is a list of
+sections, which all have names, except possibly the first one (it can be
+anonymous).
 
     # INI file is a collection of sections
     : [anon-section] {section}
 
-Curly braces mean 'repeat any number of times, including zero'; square brackets mean 'may be present or not'.
-The words 'anon-section' and 'section' are names of tokens, which we are going to describe next.
-Order of token definitions is not important, but it is usually easier to read the grammar if
-you write them in order in which they include each other.
+Curly braces mean 'repeat any number of times, including zero'; square brackets
+mean 'may be present or not'. The words 'anon-section' and 'section' are names
+of tokens, which we are going to describe next. Order of token definitions is
+not important, but it is usually easier to read the grammar if you write them
+in order in which they include each other.
 
 	anon-section: section-body
     section: "[" section-name "]" eol section-body
     # sections are made of definitions and empty lines
     section-body: {[name "=" value] eol}
 
-This should be self-explanatory. Now we have described pretty much all of the structure.
-The rest of tokens can be quite easily defined with regular expressions:
+This should be self-explanatory. Now we have described pretty much all of the
+structure. The rest of tokens can be quite easily defined with regular
+expressions:
 
 	# names are just some word-chars
     section-name: /\w+/
@@ -56,27 +60,32 @@ The rest of tokens can be quite easily defined with regular expressions:
     # a newline char or the end of file
     eol: /(\r?\n|$)/
 
-Look into hatchet.hatchet for additional syntax constructs (grouping, alternatives).
+Look into hatchet.hatchet for additional syntax constructs (grouping,
+alternatives).
 
 ### Whitespace
 
 In order to unclutter the grammar definition, Hatchet allows inline whitespace
-(spaces and table) between any tokens. This way you don't have to manually insert
-whitespace tokens everywhere.
+(spaces and table) between any tokens. This way you don't have to manually
+insert whitespace tokens everywhere.
 
-In future, there might be a possibility to switch between three whitespace modes:
+In future, there might be a possibility to switch between whitespace modes:
 
- 1. No implicit whitespace at all
- 2. Implicit inline whitespace (current behaviour, useful for line-based config files)
- 3. Implicit whitespace including line breaks (useful for XML-like syntaxes)
+ 1. `manual`: no implicit whitespace at all
+ 2. `inline`: implicit inline whitespace (current behaviour, useful for
+    line-based config files)
+ 3. `implicit`: Implicit whitespace including line breaks (useful for XML-like
+    syntaxes)
 
 ### Special tokens
 
-`_quoted_` is a special (predefined) token for a quoted string, i.e. "line \n other line" or 'whatever'
-(with quotes included in the matched text). These strings follow PHP style of quoting for special characters.
+`_quoted_` is a special (predefined) token for a quoted string, i.e.
+"line \n other line" or 'whatever' (with quotes included in the matched text).
+These strings follow PHP style of quoting for special characters.
 
-`_whitespace_` is a special token for an inline whitespace character (space or tab). It is useful if you want to force at least one
-space/tab between your tokens. Hatchet by default allows any whitespace between tokens, including none.
+`_whitespace_` is a special token for an inline whitespace character (space or
+tab). It is useful if you want to force at least one space/tab between your
+tokens. Hatchet by default allows any whitespace between tokens, including none.
 
 ## TODO
 
@@ -94,6 +103,7 @@ space/tab between your tokens. Hatchet by default allows any whitespace between 
  * Investigate performance and memory usage
  * Make an example for expression parsing and operator precedence (calculator)
  * (@named "groups")? Could be useful to assign same name to different literals
+ * Super challenge: SQL
 
 We can make callbacks with signature process_child($node, $child)
 and probably will be able to start from root and then go deep.
@@ -101,5 +111,19 @@ and probably will be able to start from root and then go deep.
 What are the use cases?
 
  1. Read a LESS file, convert it into CSS
- 2. Validate WTF tag nesting
- 3. Read INI file into a variable
+ 2. Read INI file into a variable
+
+We can implement callbacks like this:
+take a compiler object
+when a childless token is scanned, call compiler->token()
+when a token group starts, call compiler->begin()
+when a token group ends, call compiler->end()
+(or even drop the token() and just call begin() and end() with positions)
+but how can we do this with backtracking? we should not call begin() if the
+token is going to be discarded
+
+Annotations can be used for doing things with the grammar.
+E.g. @inline-one-child would inline a token if it only has one child
+(useful for grouping.multiplication.addition.negative.number).
+Root token annotations could be treated as global (whitespace modes etc),
+then whitespace mode can be updated for the particular token tree.
