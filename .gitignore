@@ -5,4 +5,5 @@
 /tests/*.log
 /tests/*.out
 /tests/*.php
+!/tests/_*.php
 /run-tests.log
