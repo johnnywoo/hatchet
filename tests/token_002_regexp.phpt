@@ -8,7 +8,7 @@ require_once '_common.php';
 use hatchet\Grammar;
 use hatchet\tokens\Regexp;
 
-class TestGrammar extends Grammar
+class TestGrammar2 extends Grammar
 {
 	public function __construct()
 	{
@@ -16,7 +16,7 @@ class TestGrammar extends Grammar
 	}
 }
 
-$grammar = new TestGrammar();
+$grammar = new TestGrammar2();
 dump_tree($grammar->parse('a1'));
 
 ?>

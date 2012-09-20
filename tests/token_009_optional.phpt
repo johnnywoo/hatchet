@@ -10,7 +10,7 @@ use hatchet\tokens\Token;
 use hatchet\tokens\Multiplier;
 use hatchet\tokens\Literal;
 
-class TestGrammar extends Grammar
+class TestGrammar9 extends Grammar
 {
 	public function __construct()
 	{
@@ -21,7 +21,7 @@ class TestGrammar extends Grammar
 	}
 }
 
-$grammar = new TestGrammar();
+$grammar = new TestGrammar9();
 
 echo "Normal\n";
 dump_tree($grammar->parse('ab'));

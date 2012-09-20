@@ -8,7 +8,7 @@ require_once '_common.php';
 use hatchet\Grammar;
 use hatchet\tokens\Literal;
 
-class TestGrammar extends Grammar
+class TestGrammar1 extends Grammar
 {
 	public function __construct()
 	{
@@ -16,7 +16,7 @@ class TestGrammar extends Grammar
 	}
 }
 
-$grammar = new TestGrammar();
+$grammar = new TestGrammar1();
 dump_tree($grammar->parse('a'));
 
 ?>

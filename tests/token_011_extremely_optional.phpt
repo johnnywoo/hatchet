@@ -15,7 +15,7 @@ function optional($token)
 	return new Multiplier('', array($token), true);
 }
 
-class TestGrammar extends Grammar
+class TestGrammar11 extends Grammar
 {
 	public function __construct()
 	{
@@ -34,7 +34,7 @@ class TestGrammar extends Grammar
 	}
 }
 
-$grammar = new TestGrammar();
+$grammar = new TestGrammar11();
 
 echo "Empty\n";
 dump_tree($grammar->parse('c'));

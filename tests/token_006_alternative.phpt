@@ -9,7 +9,7 @@ use hatchet\Grammar;
 use hatchet\tokens\Alternative;
 use hatchet\tokens\Literal;
 
-class TestGrammar extends Grammar
+class TestGrammar6 extends Grammar
 {
 	public function __construct()
 	{
@@ -20,7 +20,7 @@ class TestGrammar extends Grammar
 	}
 }
 
-$grammar = new TestGrammar();
+$grammar = new TestGrammar6();
 
 echo "First\n";
 dump_tree($grammar->parse('a'));

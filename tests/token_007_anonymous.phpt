@@ -10,7 +10,7 @@ use hatchet\tokens\Token;
 use hatchet\tokens\Multiplier;
 use hatchet\tokens\Literal;
 
-class TestGrammar extends Grammar
+class TestGrammar7 extends Grammar
 {
 	public function __construct()
 	{
@@ -30,7 +30,7 @@ class TestGrammar extends Grammar
 	}
 }
 
-$grammar = new TestGrammar();
+$grammar = new TestGrammar7();
 dump_tree($grammar->parse('>a1,a1<'));
 
 ?>

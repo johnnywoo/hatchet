@@ -6,11 +6,10 @@ Basic test: whitespace around tokens should be ignored
 
 require_once '_common.php';
 use hatchet\Grammar;
-use hatchet\tokens\Token;
 use hatchet\tokens\Multiplier;
 use hatchet\tokens\Literal;
 
-class TestGrammar extends Grammar
+class TestGrammar8 extends Grammar
 {
 	public function __construct()
 	{
@@ -20,7 +19,7 @@ class TestGrammar extends Grammar
 	}
 }
 
-$grammar = new TestGrammar();
+$grammar = new TestGrammar8();
 dump_tree($grammar->parse(" a  \taa "));
 
 ?>
