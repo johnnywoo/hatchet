@@ -9,7 +9,13 @@
 # Names of tokens are case sensitive.
 # "|" is for alternative paths, it is bounded by () {} [] or
 # the whole definition if there are no boundaries.
-line: [comment | DEFINITION]
+line: [comment | whitespace-declaration | DEFINITION]
+
+# There may be a whitespace mode declaration in the grammar.
+# By default it is "inline", i.e. any number of spaces and tabs
+# is allowed between any tokens.
+whitespace-declaration: "@whitespace" _whitespace_ WHITESPACE-MODE
+WHITESPACE-MODE: "manual" | "inline" | "implicit"
 
 # Parentheses are for grouping.
 # The name is uppercased by convention: nodes with names not starting with

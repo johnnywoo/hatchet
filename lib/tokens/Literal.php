@@ -12,10 +12,11 @@ class Literal extends Token
 		$this->literal = $literal;
 	}
 
-	public function scan(&$text)
+	public function scan(&$text, $whitespace_mode_regexp)
 	{
 		// implicit whitespace
-		$text = preg_replace("/^[ \t]+/", '', $text);
+		if($whitespace_mode_regexp)
+			$text = preg_replace($whitespace_mode_regexp, '', $text);
 
 		$length = strlen($this->literal);
 		if(substr($text, 0, $length) == $this->literal)

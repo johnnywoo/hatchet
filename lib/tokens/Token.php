@@ -33,16 +33,17 @@ class Token
 	 * Return NULL if the token is not found; a data array otherwise.
 	 *
 	 * @param string $text
+	 * @param string $whitespace_mode_regexp
 	 * @return array|null
 	 */
-	public function scan(&$text)
+	public function scan(&$text, $whitespace_mode_regexp)
 	{
 		$orig_text = $text;
 
 		$child_nodes = array();
 		foreach($this->definition as $token)
 		{
-			$node = $token->scan($text);
+			$node = $token->scan($text, $whitespace_mode_regexp);
 			if(is_null($node))
 				return null;
 

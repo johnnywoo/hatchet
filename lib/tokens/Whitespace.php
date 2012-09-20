@@ -15,7 +15,7 @@ class Whitespace extends Token
 {
 	private $chars = array(' ', "\t");
 
-	public function scan(&$text)
+	public function scan(&$text, $whitespace_mode_regexp)
 	{
 		if($text !== '')
 		{

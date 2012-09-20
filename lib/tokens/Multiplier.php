@@ -8,7 +8,7 @@ class Multiplier extends Token
 
 	/**
 	 * @param string $name
-	 * @param \hatchet\Token[] $definition
+	 * @param Token[] $definition
 	 * @param bool $only_one_or_zero  FALSE = [], TRUE = {}
 	 */
 	public function __construct($name, array $definition, $only_one_or_zero = false)
@@ -17,7 +17,7 @@ class Multiplier extends Token
 		$this->only_one_or_zero = $only_one_or_zero;
 	}
 
-	public function scan(&$text)
+	public function scan(&$text, $whitespace_mode_regexp)
 	{
 		$orig_text = $text;
 
@@ -26,7 +26,7 @@ class Multiplier extends Token
 		do
 		{
 			$one_pass_orig_text = $text;
-			$node = parent::scan($text);
+			$node = parent::scan($text, $whitespace_mode_regexp);
 			if(is_null($node))
 			{
 				// backtrack

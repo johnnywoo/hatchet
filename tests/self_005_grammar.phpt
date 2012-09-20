@@ -25,7 +25,21 @@ DEFINITION
 		CONDITION
 			ALTERNATIVE-TOKENS
 				NAME comment
+				NAME whitespace-declaration
 				NAME DEFINITION
+DEFINITION
+	NAME whitespace-declaration
+	BODY
+		LITERAL "@whitespace"
+		NAME _whitespace_
+		NAME WHITESPACE-MODE
+DEFINITION
+	NAME WHITESPACE-MODE
+	BODY
+		ALTERNATIVE-TOKENS
+			LITERAL "manual"
+			LITERAL "inline"
+			LITERAL "implicit"
 DEFINITION
 	NAME DEFINITION
 	BODY

@@ -4,14 +4,14 @@ namespace hatchet\tokens;
 
 class Alternative extends Token
 {
-	public function scan(&$text)
+	public function scan(&$text, $whitespace_mode_regexp)
 	{
 		$orig_text = $text;
 
 		// token
 		foreach($this->definition as $token)
 		{
-			$child = $token->scan($text);
+			$child = $token->scan($text, $whitespace_mode_regexp);
 			if(!is_null($child))
 			{
 				return array(

@@ -8,6 +8,9 @@ In other words, if you want speed, you should cache all the things.
 A loaded grammar object can be safely serialized and reused to skip
 parsing and building of the grammar file.
 
+Error reporting is nonexistent, as any parsing error will be reported as
+'root token does not cover the whole file'.
+
 Also, the codebase must be pretty unstable, there being no production
 application of it.
 
@@ -66,10 +69,11 @@ alternatives).
 ### Whitespace
 
 In order to unclutter the grammar definition, Hatchet allows inline whitespace
-(spaces and table) between any tokens. This way you don't have to manually
+(spaces and tabs) between any tokens. This way you don't have to manually
 insert whitespace tokens everywhere.
 
-In future, there might be a possibility to switch between whitespace modes:
+You many switch between whitespace modes using `@whitespace` declaration.
+There may be only one whitespace declaration per grammar.
 
  1. `manual`: no implicit whitespace at all
  2. `inline`: implicit inline whitespace (current behaviour, useful for
@@ -92,8 +96,8 @@ tokens. Hatchet by default allows any whitespace between tokens, including none.
  * Proper quote scanning
  * Normal quote processing instead of eval
  * Parse-time callbacks
- * Whitespace modes
  * Probably a way to specify whitespace mode for a token
+ * Probably a way to locally disable implicit whitespace
  * Maybe replace _whitespace_ with normal regexp tokens
  * A proper readme
  * Examples with simple formats (ini, css)

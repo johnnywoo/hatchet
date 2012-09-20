@@ -82,10 +82,22 @@ class HatchetGrammar extends Grammar
 			new Alternative(null, array($regexp, $body)),
 		));
 
-		// line: [comment | DEFINITION]
+		// whitespace-declaration: "@whitespace" _whitespace_ WHITESPACE-MODE
+		$whitespace_declaration = new Token(null, array(
+			new Literal(null, '@whitespace'),
+			new Whitespace(),
+			new Alternative('WHITESPACE-MODE', array(
+				new Literal(null, 'manual'),
+				new Literal(null, 'inline'),
+				new Literal(null, 'implicit'),
+			))
+		));
+
+		// line: [comment | whitespace-declaration | DEFINITION]
 		$line = new Multiplier('line', array(
 			new Alternative(null, array(
 				$comment,
+				$whitespace_declaration,
 				$definition,
 			)),
 		), false);
@@ -167,16 +179,26 @@ class HatchetGrammar extends Grammar
 	 *     `-- 2
 	 *
 	 * @param array $tree
+	 * @throws Exception
 	 * @return Token
 	 */
 	private static function build($tree)
 	{
 		static::$definitions     = array();
 		static::$followup_tokens = array();
+		$whitespace_mode = null;
 
 		// preparing a list of token definitions
 		foreach($tree as $node)
 		{
+			if($node['name'] == 'WHITESPACE-MODE')
+			{
+				if(!is_null($whitespace_mode))
+					throw new Exception("Parse error: multiple whitespace declarations are not allowed");
+				$whitespace_mode = $node['text'];
+				continue;
+			}
+
 			/*
 			 * A node is an array of:
 			 * [name] => DEFINITION
@@ -207,7 +229,11 @@ class HatchetGrammar extends Grammar
 		$spt = static::remove_meaningless_tokens($spt);
 		$token = $spt->definition[0];
 
-		return $token;
+		// we'll have to come up with something less awful someday
+		return array(
+			$token,
+			$whitespace_mode ?: static::WHITESPACE_INLINE
+		);
 	}
 
 	private static function remove_meaningless_tokens(Token $token, $visited = array())
@@ -252,6 +278,7 @@ class HatchetGrammar extends Grammar
 	 * Returns a token by name, creates it if necessary
 	 *
 	 * @param string $name
+	 * @throws Exception
 	 * @return Token
 	 */
 	private static function get_token($name)
@@ -281,6 +308,7 @@ class HatchetGrammar extends Grammar
 	 * Creates a token by its definition tree
 	 *
 	 * @param array $node
+	 * @throws Exception
 	 * @return Token
 	 */
 	private static function build_token_by_tree($node)

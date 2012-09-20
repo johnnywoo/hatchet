@@ -5,6 +5,12 @@ use hatchet\tokens\Token;
 
 class Grammar
 {
+	const WHITESPACE_MANUAL   = 'manual';
+	const WHITESPACE_INLINE   = 'inline';
+	const WHITESPACE_IMPLICIT = 'implicit';
+
+	protected $whitespace_mode = self::WHITESPACE_INLINE;
+
 	/** @var \hatchet\tokens\Token */
 	protected $root_token;
 
@@ -13,18 +19,21 @@ class Grammar
 	 */
 	public function __construct($grammar)
 	{
-		$this->root_token = HatchetGrammar::build_root_token($grammar);
+		list($this->root_token, $this->whitespace_mode) = HatchetGrammar::build_root_token($grammar);
 	}
 
 	public function parse($text)
 	{
-		$ans = $this->root_token->scan($text);
+		$ws_regexp = $this->get_ws_mode_regexp($this->whitespace_mode);
+
+		$ans = $this->root_token->scan($text, $ws_regexp);
 
 		if(is_null($ans))
 			throw new Exception('Parse error: root token not found');
 
 		// implicit whitespace
-		$text = preg_replace("/^[ \t]+/", '', $text);
+		if($ws_regexp)
+			$text = preg_replace($ws_regexp, '', $text);
 
 		if(strlen($text))
 			throw new Exception('Parse error: root token does not cover the whole text');
@@ -57,5 +66,16 @@ class Grammar
 			$new_nodes = array_merge($new_nodes, $append);
 		}
 		return $new_nodes;
+	}
+
+	private function get_ws_mode_regexp($ws_mode)
+	{
+		switch($ws_mode)
+		{
+			case static::WHITESPACE_MANUAL:   return '';
+			case static::WHITESPACE_INLINE:   return "/^[ \t]+/";
+			case static::WHITESPACE_IMPLICIT: return "/^\s+/";
+		}
+		throw new Exception("Unknown whitespace mode: {$ws_mode}");
 	}
 }

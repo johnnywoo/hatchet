@@ -4,10 +4,11 @@ namespace hatchet\tokens;
 
 class QuotedString extends Token
 {
-	public function scan(&$text)
+	public function scan(&$text, $whitespace_mode_regexp)
 	{
 		// implicit whitespace
-		$text = preg_replace("/^[ \t]+/", '', $text);
+		if($whitespace_mode_regexp)
+			$text = preg_replace($whitespace_mode_regexp, '', $text);
 
 		if(preg_match('/^".*?"/', $text, $m))
 		{
