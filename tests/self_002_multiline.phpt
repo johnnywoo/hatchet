@@ -5,10 +5,11 @@ Our own grammar: multiline spec
 <?php
 
 require_once '_common.php';
+
 use hatchet\HatchetGrammar;
 
 $grammar = new HatchetGrammar();
-dump_tree($grammar->parse('
+dumpTree($grammar->parse('
 	: body
 	body: "a"
 '));

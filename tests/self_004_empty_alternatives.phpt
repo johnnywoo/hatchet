@@ -5,10 +5,11 @@ Our own grammar: empty alternatives should be optimized out
 <?php
 
 require_once '_common.php';
+
 use hatchet\HatchetGrammar;
 
 $grammar = new HatchetGrammar();
-dump_tree($grammar->parse('	: [ "head" ] "body" [ "tail" ] '));
+dumpTree($grammar->parse('	: [ "head" ] "body" [ "tail" ] '));
 
 /**
  * The syntax for optional token is: "[" alternative "]"

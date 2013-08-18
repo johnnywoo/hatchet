@@ -5,10 +5,10 @@ Calc grammar: grouping addition
 
 require_once '_common.php';
 
-test_calc('0 + (1 + 1)');
-test_calc('0 - (1 + 1)');
-test_calc('0 - (1 - 1)');
-test_calc('0 - (10 - (1 - 6) + 100) + 1000');
+testCalc('0 + (1 + 1)');
+testCalc('0 - (1 + 1)');
+testCalc('0 - (1 - 1)');
+testCalc('0 - (10 - (1 - 6) + 100) + 1000');
 
 ?>
 --EXPECT--

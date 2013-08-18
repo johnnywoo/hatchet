@@ -5,6 +5,7 @@ Basic test: a multiplier with empty tokens
 <?php
 
 require_once '_common.php';
+
 use hatchet\Grammar;
 use hatchet\tokens\Token;
 use hatchet\tokens\Multiplier;
@@ -20,32 +21,38 @@ class TestGrammar10 extends Grammar
 		// This should mean any number of dashes with "a" on some of them.
 		// The intended newline symbol is of course "\n",
 		// but the dump becomes quite unreadable with it.
-		$line = new Multiplier('line', array(
-			new Literal('word', 'a'),
-		), true);
-		$this->root_token = new Multiplier('', array(
-			$line,
-			new Multiplier(null, array(
-				new Literal('newline', "-"),
-				$line,
-			)),
-		), true);
+		$line = new Multiplier(
+            'line',
+            array(new Literal('word', 'a')),
+            true // only one or zero
+        );
+		$this->root_token = new Multiplier(
+            '',
+            array(
+                $line,
+                new Multiplier(null, array(
+                    new Literal('newline', "-"),
+                    $line,
+                )),
+            ),
+            true // only one or zero
+        );
 	}
 }
 
 $grammar = new TestGrammar10();
 
 echo "Empty\n";
-dump_tree($grammar->parse(''));
+dumpTree($grammar->parse(''));
 
 echo "\nFilled\n";
-dump_tree($grammar->parse('a-a'));
+dumpTree($grammar->parse('a-a'));
 
 echo "\nEmpty lines\n";
-dump_tree($grammar->parse('--'));
+dumpTree($grammar->parse('--'));
 
 echo "\nMixed\n";
-dump_tree($grammar->parse('a--a-'));
+dumpTree($grammar->parse('a--a-'));
 
 ?>
 --EXPECT--

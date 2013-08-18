@@ -5,6 +5,7 @@ Basic test: very optional tokens; multiplier should not hang
 <?php
 
 require_once '_common.php';
+
 use hatchet\Grammar;
 use hatchet\tokens\Token;
 use hatchet\tokens\Multiplier;
@@ -22,12 +23,18 @@ class TestGrammar11 extends Grammar
 		// : { [["a"] "b"] } "c"
 		$this->root_token = new Token('', array(
 			new Multiplier(null, array(
-				new Multiplier(null, array(
-					new Multiplier(null, array(
-						new Literal('a', 'a'),
-					), true),
-					new Literal('b', 'b'),
-				), true),
+				new Multiplier(
+                    null,
+                    array(
+                        new Multiplier(
+                            null,
+                            array(new Literal('a', 'a')),
+                            true  // only one or zero
+                        ),
+                        new Literal('b', 'b'),
+                    ),
+                    true  // only one or zero
+                ),
 			)),
 			new Literal('c', 'c'),
 		));
@@ -37,16 +44,16 @@ class TestGrammar11 extends Grammar
 $grammar = new TestGrammar11();
 
 echo "Empty\n";
-dump_tree($grammar->parse('c'));
+dumpTree($grammar->parse('c'));
 
 echo "\nMedium\n";
-dump_tree($grammar->parse('b c'));
+dumpTree($grammar->parse('b c'));
 
 echo "\nNormal\n";
-dump_tree($grammar->parse('ab c'));
+dumpTree($grammar->parse('ab c'));
 
 echo "\nMixed\n";
-dump_tree($grammar->parse('ab b ab c'));
+dumpTree($grammar->parse('ab b ab c'));
 
 ?>
 --EXPECT--

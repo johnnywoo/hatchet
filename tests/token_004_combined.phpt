@@ -5,6 +5,7 @@ Basic test: three consecutive literals
 <?php
 
 require_once '_common.php';
+
 use hatchet\Grammar;
 use hatchet\tokens\Token;
 use hatchet\tokens\Literal;
@@ -22,7 +23,7 @@ class TestGrammar4 extends Grammar
 }
 
 $grammar = new TestGrammar4();
-dump_tree($grammar->parse('a:b'));
+dumpTree($grammar->parse('a:b'));
 
 ?>
 --EXPECT--

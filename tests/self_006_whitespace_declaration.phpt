@@ -5,23 +5,22 @@ Our own grammar: whitespace declaration should be allowed
 <?php
 
 require_once '_common.php';
+
 use hatchet\HatchetGrammar;
 
 function doit($name, $text)
 {
-	static $parser = null;
-	if(!$parser)
-		$parser = new HatchetGrammar();
+    static $parser = null;
+    if (!$parser) {
+        $parser = new HatchetGrammar();
+    }
 
-	echo "== {$name}\n";
-	try
-	{
-		dump_tree($parser->parse($text));
-	}
-	catch(Exception $e)
-	{
-		echo get_class($e) . ': ' . $e->getMessage()."\n";
-	}
+    echo "== {$name}\n";
+    try {
+        dumpTree($parser->parse($text));
+    } catch (Exception $e) {
+        echo get_class($e) . ': ' . $e->getMessage() . "\n";
+    }
 }
 
 doit('Manual', '

@@ -5,6 +5,7 @@ Basic test: alternative
 <?php
 
 require_once '_common.php';
+
 use hatchet\Grammar;
 use hatchet\tokens\Alternative;
 use hatchet\tokens\Literal;
@@ -23,10 +24,10 @@ class TestGrammar6 extends Grammar
 $grammar = new TestGrammar6();
 
 echo "First\n";
-dump_tree($grammar->parse('a'));
+dumpTree($grammar->parse('a'));
 
 echo "\nSecond\n";
-dump_tree($grammar->parse('b'));
+dumpTree($grammar->parse('b'));
 
 ?>
 --EXPECT--

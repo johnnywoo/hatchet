@@ -5,6 +5,7 @@ Basic test: optional tokens
 <?php
 
 require_once '_common.php';
+
 use hatchet\Grammar;
 use hatchet\tokens\Token;
 use hatchet\tokens\Multiplier;
@@ -24,10 +25,10 @@ class TestGrammar9 extends Grammar
 $grammar = new TestGrammar9();
 
 echo "Normal\n";
-dump_tree($grammar->parse('ab'));
+dumpTree($grammar->parse('ab'));
 
 echo "\nEmpty\n";
-dump_tree($grammar->parse('b'));
+dumpTree($grammar->parse('b'));
 
 ?>
 --EXPECT--

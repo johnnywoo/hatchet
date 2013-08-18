@@ -5,10 +5,10 @@ Calc grammar: addition
 
 require_once '_common.php';
 
-test_calc('1');
-test_calc('2 + 2');
-test_calc('-1 + -2');
-test_calc('-10 + 5 - 1 + 100');
+testCalc('1');
+testCalc('2 + 2');
+testCalc('-1 + -2');
+testCalc('-10 + 5 - 1 + 100');
 
 ?>
 --EXPECT--

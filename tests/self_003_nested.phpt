@@ -5,10 +5,11 @@ Our own grammar: nested alternatives
 <?php
 
 require_once '_common.php';
+
 use hatchet\HatchetGrammar;
 
 $grammar = new HatchetGrammar();
-dump_tree($grammar->parse('	: ( ("a" | "A") | ("x" | "x") ) '));
+dumpTree($grammar->parse('	: ( ("a" | "A") | ("x" | "x") ) '));
 
 ?>
 --EXPECT--

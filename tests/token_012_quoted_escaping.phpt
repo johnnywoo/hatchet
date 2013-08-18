@@ -5,6 +5,7 @@ Basic test: escaping in the quoted strings
 <?php
 
 require_once '_common.php';
+
 use hatchet\Grammar;
 use hatchet\tokens\QuotedString;
 
@@ -20,7 +21,7 @@ function dump_tree_and_dequote($string)
 {
     $grammar = new TestGrammar12();
     $nodes = $grammar->parse($string);
-    dump_tree($nodes);
+    dumpTree($nodes);
     var_export(strtr(QuotedString::decode($nodes[0]['text']), array(
         "\r" => 'ACTUAL_CR_HERE',
         "\n" => 'ACTUAL_LF_HERE',

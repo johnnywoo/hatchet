@@ -5,19 +5,20 @@ Basic test: literal
 <?php
 
 require_once '_common.php';
+
 use hatchet\Grammar;
 use hatchet\tokens\Literal;
 
 class TestGrammar1 extends Grammar
 {
-	public function __construct()
-	{
-		$this->root_token = new Literal('', 'a');
-	}
+    public function __construct()
+    {
+        $this->root_token = new Literal('', 'a');
+    }
 }
 
 $grammar = new TestGrammar1();
-dump_tree($grammar->parse('a'));
+dumpTree($grammar->parse('a'));
 
 ?>
 --EXPECT--

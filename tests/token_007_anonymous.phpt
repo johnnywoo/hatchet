@@ -5,6 +5,7 @@ Basic test: flattening of anonymous tokens
 <?php
 
 require_once '_common.php';
+
 use hatchet\Grammar;
 use hatchet\tokens\Token;
 use hatchet\tokens\Multiplier;
@@ -31,7 +32,7 @@ class TestGrammar7 extends Grammar
 }
 
 $grammar = new TestGrammar7();
-dump_tree($grammar->parse('>a1,a1<'));
+dumpTree($grammar->parse('>a1,a1<'));
 
 ?>
 --EXPECT--

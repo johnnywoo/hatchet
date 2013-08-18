@@ -5,10 +5,11 @@ Our own grammar: basic
 <?php
 
 require_once '_common.php';
+
 use hatchet\HatchetGrammar;
 
 $grammar = new HatchetGrammar();
-dump_tree($grammar->parse(':"a"'));
+dumpTree($grammar->parse(':"a"'));
 
 ?>
 --EXPECT--

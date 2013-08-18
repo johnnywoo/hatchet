@@ -5,6 +5,7 @@ Basic test: whole grammar is one simple quoted string
 <?php
 
 require_once '_common.php';
+
 use hatchet\Grammar;
 use hatchet\tokens\QuotedString;
 
@@ -17,7 +18,7 @@ class TestGrammar3 extends Grammar
 }
 
 $grammar = new TestGrammar3();
-dump_tree($grammar->parse('"kar"'));
+dumpTree($grammar->parse('"kar"'));
 
 ?>
 --EXPECT--

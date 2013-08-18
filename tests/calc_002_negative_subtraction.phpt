@@ -5,10 +5,10 @@ Calc grammar: negative subtraction
 
 require_once '_common.php';
 
-test_calc('0-2');
-test_calc('0--2');
-test_calc('0 - -2');
-test_calc('0 - - 2'); // error
+testCalc('0-2');
+testCalc('0--2');
+testCalc('0 - -2');
+testCalc('0 - - 2'); // error
 
 ?>
 --EXPECT--

@@ -16,30 +16,26 @@ $parsers = array(
 	'implicit' => new Grammar("@whitespace implicit\n{$grammar_text}"),
 );
 
-function test_ws_modes($text)
+function testWsModes($text)
 {
-	/** @var $parsers Grammar[] */
-	global $parsers;
+    /** @var $parsers Grammar[] */
+    global $parsers;
 
-	echo '== ' . var_export($text, true) . "\n";
-	foreach($parsers as $name => $parser)
-	{
-		echo $name.' ';
-		try
-		{
-			$parser->parse($text);
-			echo "ok\n";
-		}
-		catch(hatchet\Exception $e)
-		{
-			echo "parse error\n";
-		}
-	}
+    echo '== ' . var_export($text, true) . "\n";
+    foreach ($parsers as $name => $parser) {
+        echo $name . ' ';
+        try {
+            $parser->parse($text);
+            echo "ok\n";
+        } catch (hatchet\Exception $e) {
+            echo "parse error\n";
+        }
+    }
 }
 
-test_ws_modes('ab');
-test_ws_modes(' a	b '); // spaces and tabs
-test_ws_modes('
+testWsModes('ab');
+testWsModes(' a	b '); // spaces and tabs
+testWsModes('
 a
 b
 ');

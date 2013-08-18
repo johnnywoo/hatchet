@@ -5,10 +5,11 @@ Our own grammar: hatchet.hatchet should be parseable by the native grammar parse
 <?php
 
 require_once '_common.php';
+
 use hatchet\HatchetGrammar;
 
 $grammar = new HatchetGrammar();
-dump_tree_less_noise($grammar->parse(file_get_contents(__DIR__.'/../hatchet.hatchet')));
+dumpTreeLessNoise($grammar->parse(file_get_contents(__DIR__.'/../hatchet.hatchet')));
 
 ?>
 --EXPECT--

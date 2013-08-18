@@ -5,10 +5,10 @@ Calc grammar: multiplication
 
 require_once '_common.php';
 
-test_calc('1 * 2');
-test_calc('1 * 10 / 2');
-test_calc('-5 * 10 / 5 * 2');
-test_calc('10 / -5 / 2');
+testCalc('1 * 2');
+testCalc('1 * 10 / 2');
+testCalc('-5 * 10 / 5 * 2');
+testCalc('10 / -5 / 2');
 
 ?>
 --EXPECT--

@@ -5,6 +5,7 @@ Basic test: multiplier
 <?php
 
 require_once '_common.php';
+
 use hatchet\Grammar;
 use hatchet\tokens\Multiplier;
 use hatchet\tokens\Literal;
@@ -22,10 +23,10 @@ class TestGrammar5 extends Grammar
 $grammar = new TestGrammar5();
 
 echo "Normal\n";
-dump_tree($grammar->parse('aaa'));
+dumpTree($grammar->parse('aaa'));
 
 echo "\nEmpty\n";
-dump_tree($grammar->parse(''));
+dumpTree($grammar->parse(''));
 
 ?>
 --EXPECT--
