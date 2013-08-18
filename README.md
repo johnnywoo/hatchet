@@ -1,5 +1,10 @@
 # Hatchet: a simple grammar-based parser
 
+## UBER-DISCLAIMER
+
+This is a work in progress. Everything will change a lot. If I ever find
+the time to do it, which is not guaranteed at all.
+
 ## DISCLAIMER
 
 Hatchet is not meant to be fast, it's a simple recursive descent parser.
@@ -16,7 +21,7 @@ application of it.
 
 ## HOWTO
 
-    <?
+    <?php
 	require_once 'hatchet/lib/autoload.php';
     $grammar = new \hatchet\Grammar(file_get_contents('your-grammar.hatchet'));
     $tree = $grammar->parse($text);
@@ -93,14 +98,12 @@ tokens. Hatchet by default allows any whitespace between tokens, including none.
 
 ## TODO
 
- * Proper quote scanning
- * Normal quote processing instead of eval
  * Parse-time callbacks
  * Probably a way to specify whitespace mode for a token
  * Probably a way to locally disable implicit whitespace
  * Maybe replace _whitespace_ with normal regexp tokens
  * A proper readme
- * Examples with simple formats (ini, css)
+ * Examples with simple formats (ini, css, yaml)
  * Inline regex literals
  * Make the grammar grammar CRLF-friendly
  * Investigate friendly syntax errors with line numbers
@@ -108,6 +111,12 @@ tokens. Hatchet by default allows any whitespace between tokens, including none.
  * Make an example for expression parsing and operator precedence (calculator)
  * (@named "groups")? Could be useful to assign same name to different literals
  * Super challenge: SQL
+ * Includes (and a standard lib like math expressions?)
+ * What can be done for indent-based languages?
+ * Set manual whitespace as default
+ * Multiline token definition
+ * Easy universal test: XMLize text (wrap given text in <Token></Token>)
+ * Change tabs into spaces and generally change all formatting
 
 We can make callbacks with signature process_child($node, $child)
 and probably will be able to start from root and then go deep.
@@ -131,3 +140,9 @@ E.g. @inline-one-child would inline a token if it only has one child
 (useful for grouping.multiplication.addition.negative.number).
 Root token annotations could be treated as global (whitespace modes etc),
 then whitespace mode can be updated for the particular token tree.
+
+Other possibility is to make custom ASTs. So we'll have a notation that
+tokens starting with an uppercase letter are 'collected', while others
+are flattened. Then we set up some correlation between token names and
+classes (lookup namespace, direct mapping, whatever). So we have a catered
+tree of proper objects right out of the parser.
