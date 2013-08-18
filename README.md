@@ -90,7 +90,9 @@ There may be only one whitespace declaration per grammar.
 
 `_quoted_` is a special (predefined) token for a quoted string, i.e.
 "line \n other line" or 'whatever' (with quotes included in the matched text).
-These strings follow PHP style of quoting for special characters.
+Escaping inside quoted strings: `\r` `\n` `\t` `\xAB` `\\` and
+also `\"` or `\'` depending which quotes you are in. Invalid escape sequences
+are left as they were.
 
 `_whitespace_` is a special token for an inline whitespace character (space or
 tab). It is useful if you want to force at least one space/tab between your
