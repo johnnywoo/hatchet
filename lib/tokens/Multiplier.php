@@ -1,52 +1,49 @@
-<?
+<?php
 
 namespace hatchet\tokens;
 
 class Multiplier extends Token
 {
-	private $only_one_or_zero = false;
+	private $onlyOneOrZero = false;
 
 	/**
 	 * @param string $name
 	 * @param Token[] $definition
-	 * @param bool $only_one_or_zero  FALSE = [], TRUE = {}
+	 * @param bool $onlyOneOrZero  FALSE = [], TRUE = {}
 	 */
-	public function __construct($name, array $definition, $only_one_or_zero = false)
+	public function __construct($name, array $definition, $onlyOneOrZero = false)
 	{
 		parent::__construct($name, $definition);
-		$this->only_one_or_zero = $only_one_or_zero;
+		$this->onlyOneOrZero = $onlyOneOrZero;
 	}
 
-	public function scan(&$text, $whitespace_mode_regexp)
-	{
-		$orig_text = $text;
+    public function scan(&$text, $whitespaceModeRegexp)
+    {
+        $origText = $text;
+        $childNodes = array();
 
-		$child_nodes = array();
+        do {
+            $onePassOrigText = $text;
+            $node = parent::scan($text, $whitespaceModeRegexp);
+            if (is_null($node)) {
+                // backtrack
+                $text = $onePassOrigText;
+                break;
+            }
 
-		do
-		{
-			$one_pass_orig_text = $text;
-			$node = parent::scan($text, $whitespace_mode_regexp);
-			if(is_null($node))
-			{
-				// backtrack
-				$text = $one_pass_orig_text;
-				break;
-			}
+            // match found, but it has no text
+            if ($text === $onePassOrigText) {
+                break;
+            }
 
-			// match found, but it has no text
-			if($text === $one_pass_orig_text)
-				break;
+            // the pass succeeded: add found nodes to the list
+            $childNodes = array_merge($childNodes, $node['childNodes']);
+        } while (!$this->onlyOneOrZero);
 
-			// the pass succeeded: add found nodes to the list
-			$child_nodes = array_merge($child_nodes, $node['child_nodes']);
-		}
-		while(!$this->only_one_or_zero);
-
-		return array(
-			'name'        => count($child_nodes) ? $this->name : null,
-			'child_nodes' => $child_nodes,
-			'text'        => static::find_shifted_text($orig_text, $text),
-		);
-	}
+        return array(
+            'name'       => count($childNodes) ? $this->name : null,
+            'childNodes' => $childNodes,
+            'text'       => static::findShiftedText($origText, $text),
+        );
+    }
 }

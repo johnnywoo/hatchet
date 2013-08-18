@@ -1,6 +1,7 @@
-<?
+<?php
 
 namespace hatchet;
+
 use hatchet\tokens\Token;
 use hatchet\tokens\Alternative;
 use hatchet\tokens\Literal;
@@ -68,9 +69,9 @@ class HatchetGrammar extends Grammar
 		));
 
 		// filling in recursive definitions
-		$grouping->set_definition(array(new Literal(null, '('), $alt, new Literal(null, ')')));
-		$condition->set_definition(array(new Literal(null, '['), $alt, new Literal(null, ']')));
-		$multiplier->set_definition(array(new Literal(null, '{'), $alt, new Literal(null, '}')));
+		$grouping->setDefinition(array(new Literal(null, '('), $alt, new Literal(null, ')')));
+		$condition->setDefinition(array(new Literal(null, '['), $alt, new Literal(null, ']')));
+		$multiplier->setDefinition(array(new Literal(null, '{'), $alt, new Literal(null, '}')));
 
 		// BODY: ALTERNATIVE-TOKENS
 		$body = new Token('BODY', array($alt));
@@ -111,48 +112,53 @@ class HatchetGrammar extends Grammar
 			)),
 		), true); // only one or zero
 
-		$this->root_token = $root;
+		$this->rootToken = $root;
 	}
 
-	protected function create_nodes($name, $text, array $child_nodes)
-	{
-		// convention: names not starting with an uppercase letter are anonymous (including root)
-		if(empty($name))
-			return $child_nodes;
-		$letter = substr($name, 0, 1);
-		if(strtolower($letter) == $letter)
-			return $child_nodes;
+	protected function createNodes($name, $text, array $childNodes)
+    {
+        // convention: names not starting with an uppercase letter are anonymous (including root)
+        if (empty($name)) {
+            return $childNodes;
+        }
+        $letter = substr($name, 0, 1);
+        if (strtolower($letter) == $letter) {
+            return $childNodes;
+        }
 
-		// a bit of optimization
+        // a bit of optimization
+        if ($name == 'TOKENS' && count($childNodes) <= 1) {
+            return $childNodes;
+        }
 
-		if($name == 'TOKENS' && count($child_nodes) <= 1)
-			return $child_nodes;
+        if ($name == 'ALTERNATIVE-TOKENS' && count($childNodes) <= 1) {
+            if (empty($childNodes)) {
+                return array();
+            }
+            $child = reset($childNodes);
+            if ($child['name'] == 'TOKENS') {
+                return $child['childNodes'];
+            }
+            return $childNodes;
+        }
 
-		if($name == 'ALTERNATIVE-TOKENS' && count($child_nodes) <= 1)
-		{
-			if(empty($child_nodes))
-				return array();
-			$child = reset($child_nodes);
-			if($child['name'] == 'TOKENS')
-				return $child['child_nodes'];
-			return $child_nodes;
-		}
+        return parent::createNodes($name, $text, $childNodes);
+    }
 
-		return parent::create_nodes($name, $text, $child_nodes);
-	}
+    public static function buildRootToken($grammar)
+    {
+        /** @var HatchetGrammar $hatchetGrammar */
+        static $hatchetGrammar;
+        if (!$hatchetGrammar) {
+            $hatchetGrammar = new static();
+        }
 
-	public static function build_root_token($grammar)
-	{
-		static $hatchet_grammar;
-		if(!$hatchet_grammar)
-			$hatchet_grammar = new static();
+        return static::build($hatchetGrammar->parse($grammar));
+    }
 
-		return static::build($hatchet_grammar->parse($grammar));
-	}
-
-	private static $definitions = array();
+    private static $definitions = array();
 	/** @var Token[] */
-	private static $followup_tokens = array();
+	private static $followupTokens = array();
 
 	/**
 	 * Converts a parsed grammar into a tree of tokens
@@ -184,138 +190,134 @@ class HatchetGrammar extends Grammar
 	 */
 	private static function build($tree)
 	{
-		static::$definitions     = array();
-		static::$followup_tokens = array();
+		static::$definitions    = array();
+		static::$followupTokens = array();
+
 		$whitespace_mode = null;
 
 		// preparing a list of token definitions
-		foreach($tree as $node)
-		{
-			if($node['name'] == 'WHITESPACE-MODE')
-			{
-				if(!is_null($whitespace_mode))
-					throw new Exception("Parse error: multiple whitespace declarations are not allowed");
-				$whitespace_mode = $node['text'];
-				continue;
-			}
+        foreach ($tree as $node) {
+            if ($node['name'] == 'WHITESPACE-MODE') {
+                if (!is_null($whitespace_mode)) {
+                    throw new Exception("Parse error: multiple whitespace declarations are not allowed");
+                }
+                $whitespace_mode = $node['text'];
+                continue;
+            }
 
-			/*
-			 * A node is an array of:
-			 * [name] => DEFINITION
-			 * [text] => : [line {"\n" line}]
-			 * [child_nodes] => array
-			 */
+            /*
+             * A node is an array of:
+             * [name] => DEFINITION
+             * [text] => : [line {"\n" line}]
+             * [childNodes] => array
+             */
 
-			// one token = root def, two = name and body
-			$name = (count($node['child_nodes']) > 1) ? $node['child_nodes'][0]['text'] : '';
+            // one token = root def, two = name and body
+            $name = (count($node['childNodes']) > 1) ? $node['childNodes'][0]['text'] : '';
 
-			if(isset(static::$definitions[$name]))
-				throw new Exception("Token $name is already defined");
+            if (isset(static::$definitions[$name])) {
+                throw new Exception("Token $name is already defined");
+            }
 
-			static::$definitions[$name] = end($node['child_nodes']);
-		}
+            static::$definitions[$name] = end($node['childNodes']);
+        }
 
-		// converting token definitions to token trees (without recursive tokens)
-		$token = static::get_token(''); // '' is the name of the root token
+        // converting token definitions to token trees (without recursive tokens)
+		$token = static::getToken(''); // '' is the name of the root token
 
 		// installing recursive tokens
-		foreach(static::$followup_tokens as $name=>$t)
-		{
-			$t->set_definition(array(static::get_token($name)));
-		}
+        foreach (static::$followupTokens as $name => $t) {
+            $t->setDefinition(array(static::getToken($name)));
+        }
 
-		// removing meaningless tokens
-		$spt = new Token(null, array($token));
-		$spt = static::remove_meaningless_tokens($spt);
-		$token = $spt->definition[0];
+        // removing meaningless tokens
+        $spt   = new Token(null, array($token));
+        $spt   = static::removeMeaninglessTokens($spt);
+        $token = $spt->definition[0];
 
-		// we'll have to come up with something less awful someday
-		return array(
-			$token,
-			$whitespace_mode ?: static::WHITESPACE_INLINE
-		);
-	}
+        // we'll have to come up with something less awful someday
+        return array(
+            $token,
+            $whitespace_mode ? : static::WHITESPACE_INLINE
+        );
+    }
 
-	private static function remove_meaningless_tokens(Token $token, $visited = array())
-	{
-		if(in_array($token, $visited))
-			return $token;
+	private static function removeMeaninglessTokens(Token $token, $visited = array())
+    {
+        if (in_array($token, $visited)) {
+            return $token;
+        }
 
-		$visited[] = $token;
+        $visited[] = $token;
 
-		foreach($token->definition as $k=>$t)
-		{
-			while(get_class($t) == __NAMESPACE__.'\tokens\Token' && count($t->definition) == 1)
-			{
-				if(is_null($t->name))
-				{
-					// removing anonymous tokens that only have one child
-					$t = $t->definition[0];
-					$token->definition[$k] = $t;
-				}
-				else if(is_null($t->definition[0]->name) && count($t->definition[0]->definition) == 0)
-				{
-					// if a named token has only one child that is an anonymous leave, we can remove it too
-					// this helps with wrapping _quoted_ in a token to give it a name (if we don't remove the
-					// wrapper, it will capture whitespace next to the _quoted_)
-					$t->definition[0]->name = $t->name;
-					$t = $t->definition[0];
-					$token->definition[$k] = $t;
-				}
-				else
-				{
-					break;
-				}
-			}
+        foreach ($token->definition as $k => $t) {
+            while (get_class($t) == __NAMESPACE__ . '\tokens\Token' && count($t->definition) == 1) {
+                if (is_null($t->name)) {
+                    // removing anonymous tokens that only have one child
+                    $t = $t->definition[0];
+                    $token->definition[$k] = $t;
+                } else if (is_null($t->definition[0]->name) && count($t->definition[0]->definition) == 0) {
+                    // if a named token has only one child that is an anonymous leave, we can remove it too
+                    // this helps with wrapping _quoted_ in a token to give it a name (if we don't remove the
+                    // wrapper, it will capture whitespace next to the _quoted_)
+                    $t->definition[0]->name = $t->name;
+                    $t = $t->definition[0];
+                    $token->definition[$k] = $t;
+                } else {
+                    break;
+                }
+            }
 
-			$token->definition[$k] = static::remove_meaningless_tokens($token->definition[$k], $visited);
-		}
+            $token->definition[$k] = static::removeMeaninglessTokens($token->definition[$k], $visited);
+        }
 
-		return $token;
-	}
+        return $token;
+    }
 
-	/**
+    /**
 	 * Returns a token by name, creates it if necessary
 	 *
 	 * @param string $name
 	 * @throws Exception
 	 * @return Token
 	 */
-	private static function get_token($name)
-	{
-		if(!isset(static::$definitions[$name]))
-		{
-			if($name == '_quoted_')
-				static::$definitions[$name] = new QuotedString();
-			else if($name == '_whitespace_')
-				static::$definitions[$name] = new Whitespace();
-			else
-				throw new Exception('Cannot find definition for '.($name == '' ? 'root token' : $name));
-		}
+	private static function getToken($name)
+    {
+        if (!isset(static::$definitions[$name])) {
+            if ($name == '_quoted_') {
+                static::$definitions[$name] = new QuotedString();
+            } else if ($name == '_whitespace_') {
+                static::$definitions[$name] = new Whitespace();
+            } else {
+                throw new Exception('Cannot find definition for ' . ($name == '' ? 'root token' : $name));
+            }
+        }
 
-		if(static::$definitions[$name] instanceof Token)
-			return static::$definitions[$name];
+        if (static::$definitions[$name] instanceof Token) {
+            return static::$definitions[$name];
+        }
 
-		$body = static::$definitions[$name];
-		$token = static::build_token_by_tree($body);
-		$token->name = $name;
+        $body = static::$definitions[$name];
 
-		static::$definitions[$name] = $token;
-		return $token;
-	}
+        $token = static::buildTokenByTree($body);
+        $token->name = $name;
 
-	/**
+        static::$definitions[$name] = $token;
+        return $token;
+    }
+
+    /**
 	 * Creates a token by its definition tree
 	 *
 	 * @param array $node
 	 * @throws Exception
 	 * @return Token
 	 */
-	private static function build_token_by_tree($node)
+	private static function buildTokenByTree($node)
 	{
 		// This name is not a node name in terms of our new grammar (that we're parsing);
 		// it's a name in terms of the grammar grammar (that we parse with).
-		// So in terms of building new tokens it's actually a type, not a name.
+		// So in terms of building new tokens it's more like a type, not a name.
 		$type = $node['name'];
 		switch($type)
 		{
@@ -326,31 +328,30 @@ class HatchetGrammar extends Grammar
 				return new Literal(null, QuotedString::decode($node['text']));
 
 			case 'BODY':
-				return new Token(null, static::build_tokens($node['child_nodes']));
+				return new Token(null, static::buildTokens($node['childNodes']));
 
 			case 'CONDITION':
-				return new Multiplier(null, static::build_tokens($node['child_nodes']), true);
+				return new Multiplier(null, static::buildTokens($node['childNodes']), true);
 
 			case 'MULTIPLIER':
-				return new Multiplier(null, static::build_tokens($node['child_nodes']));
+				return new Multiplier(null, static::buildTokens($node['childNodes']));
 
 			case 'NAME':
 				// I will take these cotton balls from you with my hand and put them in my pocket.
 				// That is, here we replace name of a token with the actual token
 				// (which we built from its definiton).
-				// Unfortunately, we cannot just return get_token() here because of recursive definitions.
+				// Unfortunately, we cannot just return getToken() here because of recursive definitions.
 				// We need to return something NOW, and when all definitions are built we can
 				// follow up and insert correct references to these temporary tokens.
-				$token =& static::$followup_tokens[$node['text']];
-				if(!isset($token))
-				{
+				$token =& static::$followupTokens[$node['text']];
+				if (!isset($token)) {
 					$token = new Token(); // this actually creates an enormous amount of anonymous tokens
-					static::get_token($node['text']); // make sure we build it
+					static::getToken($node['text']); // make sure we build it
 				}
-				return static::$followup_tokens[$node['text']];
+				return static::$followupTokens[$node['text']];
 
 			case 'ALTERNATIVE-TOKENS':
-				return new Alternative(null, static::build_tokens($node['child_nodes']));
+				return new Alternative(null, static::buildTokens($node['childNodes']));
 		}
 
 		throw new Exception('Cannot build grammar token ' . $type);
@@ -360,12 +361,11 @@ class HatchetGrammar extends Grammar
 	 * @param array $nodes
 	 * @return Token[]
 	 */
-	private static function build_tokens($nodes)
+	private static function buildTokens($nodes)
 	{
 		$tokens = array();
-		foreach($nodes as $node)
-		{
-			$tokens[] = static::build_token_by_tree($node);
+		foreach($nodes as $node) {
+			$tokens[] = static::buildTokenByTree($node);
 		}
 		return $tokens;
 	}

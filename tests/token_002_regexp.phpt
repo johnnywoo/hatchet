@@ -13,7 +13,7 @@ class TestGrammar2 extends Grammar
 {
 	public function __construct()
 	{
-		$this->root_token = new Regexp('', '/a[0-9]/');
+		$this->rootToken = new Regexp('', '/a[0-9]/');
 	}
 }
 

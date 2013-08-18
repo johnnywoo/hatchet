@@ -21,7 +21,7 @@ class TestGrammar11 extends Grammar
 	public function __construct()
 	{
 		// : { [["a"] "b"] } "c"
-		$this->root_token = new Token('', array(
+		$this->rootToken = new Token('', array(
 			new Multiplier(null, array(
 				new Multiplier(
                     null,

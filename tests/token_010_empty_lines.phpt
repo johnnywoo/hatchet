@@ -26,7 +26,7 @@ class TestGrammar10 extends Grammar
             array(new Literal('word', 'a')),
             true // only one or zero
         );
-		$this->root_token = new Multiplier(
+		$this->rootToken = new Multiplier(
             '',
             array(
                 $line,

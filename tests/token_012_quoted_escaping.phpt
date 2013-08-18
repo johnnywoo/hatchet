@@ -13,7 +13,7 @@ class TestGrammar12 extends Grammar
 {
 	public function __construct()
 	{
-		$this->root_token = new QuotedString('');
+		$this->rootToken = new QuotedString('');
 	}
 }
 

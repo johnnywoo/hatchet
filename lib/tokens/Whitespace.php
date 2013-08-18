@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace hatchet\tokens;
 
@@ -15,21 +15,19 @@ class Whitespace extends Token
 {
 	private $chars = array(' ', "\t");
 
-	public function scan(&$text, $whitespace_mode_regexp)
-	{
-		if($text !== '')
-		{
-			$char = substr($text, 0, 1);
-			if(in_array($char, $this->chars))
-			{
-				$text = substr($text, 1);
-				return array(
-					'name'        => $this->name,
-					'child_nodes' => array(),
-					'text'        => $char,
-				);
-			}
-		}
-		return null;
-	}
+	public function scan(&$text, $whitespaceModeRegexp)
+    {
+        if ($text !== '') {
+            $char = substr($text, 0, 1);
+            if (in_array($char, $this->chars)) {
+                $text = substr($text, 1);
+                return array(
+                    'name'       => $this->name,
+                    'childNodes' => array(),
+                    'text'       => $char,
+                );
+            }
+        }
+        return null;
+    }
 }

@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace hatchet\tokens;
 
@@ -6,35 +6,35 @@ use hatchet\Exception;
 
 class QuotedString extends Token
 {
-    public function scan(&$text, $whitespace_mode_regexp)
+    public function scan(&$text, $whitespaceModeRegexp)
     {
         // implicit whitespace
-        if ($whitespace_mode_regexp) {
-            $text = preg_replace($whitespace_mode_regexp, '', $text);
+        if ($whitespaceModeRegexp) {
+            $text = preg_replace($whitespaceModeRegexp, '', $text);
         }
 
         if (preg_match('/^"(\\\\.|[^\\\\"]+)*"/', $text, $m)) {
             $text = substr($text, strlen($m[0]));
             return array(
-                'name'        => $this->name,
-                'child_nodes' => array(),
-                'text'        => $m[0],
+                'name'       => $this->name,
+                'childNodes' => array(),
+                'text'       => $m[0],
             );
         }
         if (preg_match("/^'(\\\\.|[^\\\\']+)*'/", $text, $m)) {
             $text = substr($text, strlen($m[0]));
             return array(
-                'name'        => $this->name,
-                'child_nodes' => array(),
-                'text'        => $m[0],
+                'name'       => $this->name,
+                'childNodes' => array(),
+                'text'       => $m[0],
             );
         }
         return null;
     }
 
-    public static function decode($quoted_string)
+    public static function decode($quotedString)
     {
-        $quote = substr($quoted_string, 0, 1);
+        $quote = substr($quotedString, 0, 1);
         return preg_replace_callback(
             '/\\\\([' . $quote . 'trn\\\\])|\\\\x([0-9A-Fa-f]{2})/',
             function ($m) use ($quote) {
@@ -54,7 +54,7 @@ class QuotedString extends Token
 
                 throw new Exception('Really weird escape sequence encountered: ' . $m[0]);
             },
-            substr($quoted_string, 1, -1) // removing the quotes
+            substr($quotedString, 1, -1) // removing the quotes
         );
     }
 }

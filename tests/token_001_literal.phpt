@@ -13,7 +13,7 @@ class TestGrammar1 extends Grammar
 {
     public function __construct()
     {
-        $this->root_token = new Literal('', 'a');
+        $this->rootToken = new Literal('', 'a');
     }
 }
 

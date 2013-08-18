@@ -15,7 +15,7 @@ class TestGrammar7 extends Grammar
 {
 	public function __construct()
 	{
-		$this->root_token = new Token('', array(
+		$this->rootToken = new Token('', array(
 			new Literal('start', '>'),
 			// the multiplier is anonymous, so its children will be present instead of it
 			new Multiplier(null, array(

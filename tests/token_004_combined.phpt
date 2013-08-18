@@ -14,7 +14,7 @@ class TestGrammar4 extends Grammar
 {
 	public function __construct()
 	{
-		$this->root_token = new Token('', array(
+		$this->rootToken = new Token('', array(
 			new Literal('char', 'a'),
 			new Literal('char', ':'),
 			new Literal('char', 'b'),

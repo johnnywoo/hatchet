@@ -14,7 +14,7 @@ class TestGrammar5 extends Grammar
 {
 	public function __construct()
 	{
-		$this->root_token = new Multiplier('', array(
+		$this->rootToken = new Multiplier('', array(
 			new Literal('', 'a'),
 		));
 	}

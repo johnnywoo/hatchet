@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace hatchet\tokens;
 
@@ -19,10 +19,10 @@ class Token
 	public function __construct($name = null, array $definition = array())
 	{
 		$this->name = $name;
-		$this->set_definition($definition);
+		$this->setDefinition($definition);
 	}
 
-	public function set_definition(array $tokens)
+	public function setDefinition(array $tokens)
 	{
 		$this->definition = $tokens;
 	}
@@ -33,35 +33,36 @@ class Token
 	 * Return NULL if the token is not found; a data array otherwise.
 	 *
 	 * @param string $text
-	 * @param string $whitespace_mode_regexp
+	 * @param string $whitespaceModeRegexp
 	 * @return array|null
 	 */
-	public function scan(&$text, $whitespace_mode_regexp)
-	{
-		$orig_text = $text;
+    public function scan(&$text, $whitespaceModeRegexp)
+    {
+        $origText = $text;
 
-		$child_nodes = array();
-		foreach($this->definition as $token)
-		{
-			$node = $token->scan($text, $whitespace_mode_regexp);
-			if(is_null($node))
-				return null;
+        $childNodes = array();
+        foreach ($this->definition as $token) {
+            $node = $token->scan($text, $whitespaceModeRegexp);
+            if (is_null($node)) {
+                return null;
+            }
 
-			$child_nodes[] = $node;
-		}
+            $childNodes[] = $node;
+        }
 
-		return array(
-			'name'        => $this->name,
-			'child_nodes' => $child_nodes,
-			'text'        => static::find_shifted_text($orig_text, $text),
-		);
-	}
+        return array(
+            'name'       => $this->name,
+            'childNodes' => $childNodes,
+            'text'       => static::findShiftedText($origText, $text),
+        );
+    }
 
-	public static function find_shifted_text($orig_text, $new_text)
-	{
-		// substr will return false for an empty substring
-		if($orig_text === $new_text)
-			return '';
-		return substr($orig_text, 0, strlen($orig_text) - strlen($new_text));
-	}
+    public static function findShiftedText($origText, $newText)
+    {
+        // substr will return false for an empty substring
+        if ($origText === $newText) {
+            return '';
+        }
+        return substr($origText, 0, strlen($origText) - strlen($newText));
+    }
 }

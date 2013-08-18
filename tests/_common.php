@@ -11,7 +11,7 @@ function dumpTree($nodes, $level = 0)
     foreach ($nodes as $node) {
         $prefix = str_repeat("\t", $level);
         echo $prefix . var_export($node['name'], true) . ' text: ' . var_export($node['text'], true) . "\n";
-        dumpTree($node['child_nodes'], $level + 1);
+        dumpTree($node['childNodes'], $level + 1);
     }
 }
 
@@ -20,10 +20,10 @@ function dumpTreeLessNoise($nodes, $level = 0)
     foreach ($nodes as $node) {
         $prefix = str_repeat("\t", $level);
         echo $prefix . ($node['name'] ? : '{root}')
-            . (empty($node['child_nodes']) ? ' '
+            . (empty($node['childNodes']) ? ' '
             . strtr($node['text'], array("\n" => "\\n", "\t" => "\\t")) : '') . "\n"
         ;
-        dumpTreeLessNoise($node['child_nodes'], $level + 1);
+        dumpTreeLessNoise($node['childNodes'], $level + 1);
     }
 }
 
@@ -55,7 +55,7 @@ function compileCalcTree($tree)
                 break;
 
             default:
-                $subtreeResult = compileCalcTree($node['child_nodes']);
+                $subtreeResult = compileCalcTree($node['childNodes']);
                 $ans = eval("return {$ans} {$op} {$subtreeResult};");
                 break;
         }
