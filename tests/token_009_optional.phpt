@@ -6,10 +6,10 @@ Basic test: optional tokens
 
 require_once '_common.php';
 
-use hatchet\Grammar;
-use hatchet\tokens\Token;
-use hatchet\tokens\Multiplier;
-use hatchet\tokens\Literal;
+use Hatchet\Grammar;
+use Hatchet\Tokens\Token;
+use Hatchet\Tokens\Multiplier;
+use Hatchet\Tokens\Literal;
 
 class TestGrammar9 extends Grammar
 {

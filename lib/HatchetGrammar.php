@@ -1,14 +1,14 @@
 <?php
 
-namespace hatchet;
+namespace Hatchet;
 
-use hatchet\tokens\Token;
-use hatchet\tokens\Alternative;
-use hatchet\tokens\Literal;
-use hatchet\tokens\Multiplier;
-use hatchet\tokens\QuotedString;
-use hatchet\tokens\Regexp;
-use hatchet\tokens\Whitespace;
+use Hatchet\Tokens\Token;
+use Hatchet\Tokens\Alternative;
+use Hatchet\Tokens\Literal;
+use Hatchet\Tokens\Multiplier;
+use Hatchet\Tokens\QuotedString;
+use Hatchet\Tokens\Regexp;
+use Hatchet\Tokens\Whitespace;
 
 /**
  * A standard grammar for hatchet grammar file

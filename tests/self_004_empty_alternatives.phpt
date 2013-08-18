@@ -6,7 +6,7 @@ Our own grammar: empty alternatives should be optimized out
 
 require_once '_common.php';
 
-use hatchet\HatchetGrammar;
+use Hatchet\HatchetGrammar;
 
 $grammar = new HatchetGrammar();
 dumpTree($grammar->parse('	: [ "head" ] "body" [ "tail" ] '));

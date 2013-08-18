@@ -29,12 +29,12 @@ function dumpTreeLessNoise($nodes, $level = 0)
 
 function testCalc($expr)
 {
-    $parser = new \hatchet\Grammar(file_get_contents(__DIR__ . '/calc.hatchet'));
+    $parser = new \Hatchet\Grammar(file_get_contents(__DIR__ . '/calc.hatchet'));
     echo "\nExpression: $expr\n";
     try {
         $tree = $parser->parse($expr);
         echo "Result: " . compileCalcTree($tree) . "\n";
-    } catch (\hatchet\Exception $e) {
+    } catch (\Hatchet\Exception $e) {
         echo 'Exception: ' . $e->getMessage() . "\n";
     }
 }

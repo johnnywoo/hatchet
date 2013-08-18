@@ -6,7 +6,7 @@ Our own grammar: hatchet.hatchet should be parseable by the native grammar parse
 
 require_once '_common.php';
 
-use hatchet\HatchetGrammar;
+use Hatchet\HatchetGrammar;
 
 $grammar = new HatchetGrammar();
 dumpTreeLessNoise($grammar->parse(file_get_contents(__DIR__.'/../hatchet.hatchet')));

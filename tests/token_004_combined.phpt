@@ -6,9 +6,9 @@ Basic test: three consecutive literals
 
 require_once '_common.php';
 
-use hatchet\Grammar;
-use hatchet\tokens\Token;
-use hatchet\tokens\Literal;
+use Hatchet\Grammar;
+use Hatchet\Tokens\Token;
+use Hatchet\Tokens\Literal;
 
 class TestGrammar4 extends Grammar
 {

@@ -6,7 +6,7 @@ Our own grammar: basic
 
 require_once '_common.php';
 
-use hatchet\HatchetGrammar;
+use Hatchet\HatchetGrammar;
 
 $grammar = new HatchetGrammar();
 dumpTree($grammar->parse(':"a"'));

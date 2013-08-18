@@ -6,8 +6,8 @@ Basic test: regexp
 
 require_once '_common.php';
 
-use hatchet\Grammar;
-use hatchet\tokens\Regexp;
+use Hatchet\Grammar;
+use Hatchet\Tokens\Regexp;
 
 class TestGrammar2 extends Grammar
 {

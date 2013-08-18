@@ -6,8 +6,8 @@ Our own grammar: multiple whitespace declarations are not allowed
 
 require_once '_common.php';
 
-use hatchet\Grammar;
-use hatchet\Exception;
+use Hatchet\Grammar;
+use Hatchet\Exception;
 
 try {
     new Grammar('
@@ -22,4 +22,4 @@ try {
 
 ?>
 --EXPECT--
-hatchet\Exception: Parse error: multiple whitespace declarations are not allowed
+Hatchet\Exception: Parse error: multiple whitespace declarations are not allowed

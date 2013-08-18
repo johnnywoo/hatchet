@@ -1,6 +1,6 @@
 <?php
 
-namespace hatchet;
+namespace Hatchet;
 
 /**
  * Autoloads classes by the namespace
@@ -15,7 +15,7 @@ function autoload($className)
         return false;
     }
 
-    // hatchet\ns_2\Class_Name_Path => lib/ns_2/Class/Name/Path.php
+    // Hatchet\NS_2\Class_Name_Path => lib/NS_2/Class/Name/Path.php
     $className = substr($className, strlen($ns));
 
     $parts   = explode('\\', $className);
@@ -31,4 +31,4 @@ function autoload($className)
     return false;
 }
 
-spl_autoload_register(__NAMESPACE__.'\autoload');
+spl_autoload_register(__NAMESPACE__ . '\autoload');

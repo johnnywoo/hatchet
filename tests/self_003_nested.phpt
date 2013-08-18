@@ -6,7 +6,7 @@ Our own grammar: nested alternatives
 
 require_once '_common.php';
 
-use hatchet\HatchetGrammar;
+use Hatchet\HatchetGrammar;
 
 $grammar = new HatchetGrammar();
 dumpTree($grammar->parse('	: ( ("a" | "A") | ("x" | "x") ) '));

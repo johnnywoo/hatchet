@@ -1,8 +1,8 @@
 <?php
 
-namespace hatchet;
+namespace Hatchet;
 
-use hatchet\tokens\Token;
+use Hatchet\Tokens\Token;
 
 class Grammar
 {

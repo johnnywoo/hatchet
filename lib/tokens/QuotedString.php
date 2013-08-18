@@ -1,8 +1,8 @@
 <?php
 
-namespace hatchet\tokens;
+namespace Hatchet\Tokens;
 
-use hatchet\Exception;
+use Hatchet\Exception;
 
 class QuotedString extends Token
 {

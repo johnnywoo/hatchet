@@ -1,6 +1,6 @@
 <?php
 
-namespace hatchet\tokens;
+namespace Hatchet\Tokens;
 
 class Alternative extends Token
 {

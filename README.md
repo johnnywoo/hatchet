@@ -23,7 +23,7 @@ application of it.
 
     <?php
 	require_once 'hatchet/lib/autoload.php';
-    $grammar = new \hatchet\Grammar(file_get_contents('your-grammar.hatchet'));
+    $grammar = new \Hatchet\Grammar(file_get_contents('your-grammar.hatchet'));
     $tree = $grammar->parse($text);
     ?>
 

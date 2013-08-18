@@ -5,8 +5,8 @@ Usage: whitespace modes
 
 require_once '_common.php';
 
-use hatchet\Grammar;
-use hatchet\Exception;
+use Hatchet\Grammar;
+use Hatchet\Exception;
 
 $grammar_text = ': "a" "b"';
 
@@ -16,7 +16,7 @@ $parsers = array(
 	'implicit' => new Grammar("@whitespace implicit\n{$grammar_text}"),
 );
 
-function testWsModes($text)
+function testWhitespaceModes($text)
 {
     /** @var $parsers Grammar[] */
     global $parsers;
@@ -27,15 +27,15 @@ function testWsModes($text)
         try {
             $parser->parse($text);
             echo "ok\n";
-        } catch (hatchet\Exception $e) {
+        } catch (Hatchet\Exception $e) {
             echo "parse error\n";
         }
     }
 }
 
-testWsModes('ab');
-testWsModes(' a	b '); // spaces and tabs
-testWsModes('
+testWhitespaceModes('ab');
+testWhitespaceModes(' a	b '); // spaces and tabs
+testWhitespaceModes('
 a
 b
 ');

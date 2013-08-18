@@ -1,6 +1,6 @@
 <?php
 
-namespace hatchet\tokens;
+namespace Hatchet\Tokens;
 
 /**
  * A special token for whitespace

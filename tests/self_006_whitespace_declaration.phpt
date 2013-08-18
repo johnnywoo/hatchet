@@ -6,7 +6,7 @@ Our own grammar: whitespace declaration should be allowed
 
 require_once '_common.php';
 
-use hatchet\HatchetGrammar;
+use Hatchet\HatchetGrammar;
 
 function doit($name, $text)
 {
@@ -70,10 +70,10 @@ doit('Wrong statement case', '
 	'BODY' text: '"a"'
 		'LITERAL' text: '"a"'
 == No value
-hatchet\Exception: Parse error: root token does not cover the whole text
+Hatchet\Exception: Parse error: root token does not cover the whole text
 == Wrong value
-hatchet\Exception: Parse error: root token does not cover the whole text
+Hatchet\Exception: Parse error: root token does not cover the whole text
 == Wrong case
-hatchet\Exception: Parse error: root token does not cover the whole text
+Hatchet\Exception: Parse error: root token does not cover the whole text
 == Wrong statement case
-hatchet\Exception: Parse error: root token does not cover the whole text
+Hatchet\Exception: Parse error: root token does not cover the whole text

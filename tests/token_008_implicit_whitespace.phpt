@@ -6,9 +6,9 @@ Basic test: whitespace around tokens should be ignored
 
 require_once '_common.php';
 
-use hatchet\Grammar;
-use hatchet\tokens\Multiplier;
-use hatchet\tokens\Literal;
+use Hatchet\Grammar;
+use Hatchet\Tokens\Multiplier;
+use Hatchet\Tokens\Literal;
 
 class TestGrammar8 extends Grammar
 {

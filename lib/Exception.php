@@ -1,6 +1,6 @@
 <?php
 
-namespace hatchet;
+namespace Hatchet;
 
 class Exception extends \Exception
 {

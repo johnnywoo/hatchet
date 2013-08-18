@@ -6,10 +6,10 @@ Basic test: very optional tokens; multiplier should not hang
 
 require_once '_common.php';
 
-use hatchet\Grammar;
-use hatchet\tokens\Token;
-use hatchet\tokens\Multiplier;
-use hatchet\tokens\Literal;
+use Hatchet\Grammar;
+use Hatchet\Tokens\Token;
+use Hatchet\Tokens\Multiplier;
+use Hatchet\Tokens\Literal;
 
 function optional($token)
 {

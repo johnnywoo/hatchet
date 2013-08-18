@@ -6,8 +6,8 @@ Basic test: escaping in the quoted strings
 
 require_once '_common.php';
 
-use hatchet\Grammar;
-use hatchet\tokens\QuotedString;
+use Hatchet\Grammar;
+use Hatchet\Tokens\QuotedString;
 
 class TestGrammar12 extends Grammar
 {

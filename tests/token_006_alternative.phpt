@@ -6,9 +6,9 @@ Basic test: alternative
 
 require_once '_common.php';
 
-use hatchet\Grammar;
-use hatchet\tokens\Alternative;
-use hatchet\tokens\Literal;
+use Hatchet\Grammar;
+use Hatchet\Tokens\Alternative;
+use Hatchet\Tokens\Literal;
 
 class TestGrammar6 extends Grammar
 {
