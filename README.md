@@ -119,6 +119,11 @@ tokens. Hatchet by default allows any whitespace between tokens, including none.
  * Multiline token definition
  * Easy universal test: XMLize text (wrap given text in <Token></Token>)
  * Change tabs into spaces and generally change all formatting
+ * Annotations for token definitions
+ * Move uppercase convention into Hatchet proper
+ * Replace array responses with objects
+ * Lookup namespaces
+ * Nested block annotations
 
 We can make callbacks with signature process_child($node, $child)
 and probably will be able to start from root and then go deep.
