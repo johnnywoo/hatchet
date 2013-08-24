@@ -100,10 +100,8 @@ tokens. Hatchet by default allows any whitespace between tokens, including none.
 
 ## TODO
 
- * Parse-time callbacks
- * Probably a way to specify whitespace mode for a token
- * Probably a way to locally disable implicit whitespace
- * Maybe replace _whitespace_ with normal regexp tokens
+ * Parse-time callbacks (maybe? non-intuitive)
+ * Maybe replace `_whitespace_` with normal regexp tokens
  * A proper readme
  * Examples with simple formats (ini, css, yaml)
  * Inline regex literals
@@ -114,16 +112,17 @@ tokens. Hatchet by default allows any whitespace between tokens, including none.
  * (@named "groups")? Could be useful to assign same name to different literals
  * Super challenge: SQL
  * Includes (and a standard lib like math expressions?)
- * What can be done for indent-based languages?
  * Set manual whitespace as default
  * Multiline token definition
  * Easy universal test: XMLize text (wrap given text in <Token></Token>)
  * Change tabs into spaces and generally change all formatting
  * Annotations for token definitions
+ * A way to specify whitespace mode for a token (annotations)
+ * A way to locally disable implicit whitespace (annotations)
  * Move uppercase convention into Hatchet proper
  * Replace array responses with objects
  * Lookup namespaces
- * Nested block annotations
+ * Nested indent block annotations
 
 We can make callbacks with signature process_child($node, $child)
 and probably will be able to start from root and then go deep.
@@ -143,7 +142,7 @@ but how can we do this with backtracking? we should not call begin() if the
 token is going to be discarded
 
 Annotations can be used for doing things with the grammar.
-E.g. @inline-one-child would inline a token if it only has one child
+E.g. @anonymize-if-one-child would inline a token if it only has one child
 (useful for grouping.multiplication.addition.negative.number).
 Root token annotations could be treated as global (whitespace modes etc),
 then whitespace mode can be updated for the particular token tree.
